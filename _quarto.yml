@@ -5,8 +5,14 @@ website:
   title: "Know More Names"
   navbar:
     left:
-      - href: fatal_encounters.qmd
+      - href: fe_landing_page.qmd
         text: Fatal Encounters
+      - href: lea_landing_page.qmd
+        text: Law Enforcement Agencies
+      - href: policy_landing_page.qmd
+        text: Policy Terms
+      - href: mil_equip_landing_page.qmd
+        text: Military Equipment
       - href: about.qmd
 
 format:
