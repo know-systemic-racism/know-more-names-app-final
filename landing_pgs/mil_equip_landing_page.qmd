@@ -1,0 +1,36 @@
+---
+title: "Military Equipment"
+execute:
+    echo: false
+---
+
+```{python}
+import pandas as pd
+```
+
+```{python}
+# Dictionary with sheet ids of all LEAs we have military equipment inventories of 
+lea_codes = ['SB978-285', 'SB978-002', 'SB978-325', 'SB978-541', 'SB978-413', 'SB978-800', 'SB978-740', 'SB978-457', 'SB978-021', 'SB978-083', 'SB978-085', 'SB978-100', 'SB978-165', 'SB978-175', 'SB978-197', 'SB978-192', 'SB978-200', 'SB978-258', 'SB978-276', 'SB978-284', 'SB978-373', 'SB978-381', 'SB978-392', 'SB978-403', 'SB978-412', 'SB978-422', 'SB978-447', 'SB978-460', 'SB978-463', 'SB978-492', 'SB978-584', 'SB978-603', 'SB978-620']
+sheet_name = "1dsamURzIy5GHmL-ye9hziy1mnou2kzjQbHuZ-3e9mAM"
+```
+
+```{python}
+# retrieve all inventories, isolate only the names of the items, and concat all dfs
+dfs = []
+i = 0
+for sheet_id in lea_codes: 
+    url = f"https://docs.google.com/spreadsheets/d/{sheet_name}/gviz/tq?tqx=out:csv&sheet={sheet_id}"
+    complete_df = pd.read_csv(url)
+    just_equip_names = complete_df['Equipment name / Description']
+    dfs.append(just_equip_names)
+    i += 1
+all_mil_equip = pd.concat(dfs)
+```
+
+```{python}
+# get rid of all repeat names in column/df
+no_dupes = all_mil_equip.drop_duplicates()
+for mil_equip in no_dupes:
+    print(mil_equip)
+```
+
