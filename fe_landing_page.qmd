@@ -7,7 +7,7 @@ execute:
 ```{python}
 # !pip install SPARQLWrapper
 import sys
-from SPARQLWrapper import SPARQLWrapper, JSON
+from SPARQLWrapper import SPARQLWrapper, JSON 
 
 endpoint_url = "https://query.wikidata.org/sparql"
 
