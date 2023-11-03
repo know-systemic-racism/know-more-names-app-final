@@ -1,7 +1,47 @@
 ---
-title: "Do you know about ________________?"
+title: "Do you know about"
+execute: 
+    echo: false
 ---
 
-This is a Quarto website.
+```{python}
+# !pip install SPARQLWrapper
+import sys
+from SPARQLWrapper import SPARQLWrapper, JSON
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+endpoint_url = "https://query.wikidata.org/sparql"
+
+query = """
+        SELECT DISTINCT ?item ?itemLabel WHERE {
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+            {
+                SELECT DISTINCT ?item ?itemLabel WHERE {
+                ?item p:P5008 ?statement0.
+                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
+                }
+            }
+        }"""
+
+
+def get_results(endpoint_url, query):
+    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
+    # TODO adjust user agent; see https://w.wiki/CX6
+    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    return sparql.query().convert()
+
+
+results = get_results(endpoint_url, query)
+
+for result in results["results"]["bindings"]:
+    print(result["itemLabel"]["value"])  # print names of victims
+ojs_define(fe_data = results["results"]["bindings"])
+``` 
+
+```{ojs}
+// concat first name with last name and save it as its own column
+fe_data
+// viewof search = Inputs.search(fe_data)
+// search
+```

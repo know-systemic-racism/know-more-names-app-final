@@ -1,1 +1,22 @@
 /* css styles */
+body {
+    background-color: #414141;
+    color: #E9E9E9;
+}
+
+.navbar {
+    background-color: #414141;
+    
+}
+
+.navbar-title {
+    color: #E9E9E9;
+}
+
+.menu-text {
+    color: #E9E9E9;
+}
+
+#quarto-search {
+    color: #E9E9E9;
+}
