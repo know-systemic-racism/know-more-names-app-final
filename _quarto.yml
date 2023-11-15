@@ -14,6 +14,8 @@ website:
       - href: mil_equip_landing_page.qmd
         text: Military Equipment
       - href: about.qmd
+      - href: map_view.qmd
+        text: Map View
 
 format:
   html:

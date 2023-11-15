@@ -5,7 +5,6 @@ execute:
 ---
 
 ```{python}
-# !pip install SPARQLWrapper
 import sys
 from SPARQLWrapper import SPARQLWrapper, JSON
 
@@ -36,14 +35,28 @@ def get_results(endpoint_url, query):
 
 results = get_results(endpoint_url, query)
 
+lea_data = []
 for result in results["results"]["bindings"]:
-    print(result["itemLabel"]["value"])  # print names of leas & their coordinate locations
-ojs_define(fe_data = results["results"]["bindings"])
+    lea_data.append({'lea_name': result["itemLabel"]["value"]})
+ojs_define(lea_data = lea_data)
 ``` 
 
 ```{ojs}
-// concat first name with last name and save it as its own column
-fe_data
-// viewof search = Inputs.search(fe_data)
-// search
+viewof lea_search = Inputs.search(lea_data, 
+{placeholder: "Enter a LEA name", 
+width: 1500,
+label: "Search Law Enforcement Agencies"
+})
+
+viewof fe_rows = Inputs.table(lea_search, {
+  columns: [
+    'lea_name',
+  ],
+  format: {
+    'lea_name': x => htl.html`<a href=${x} target=_blank>${x}</a>`,
+  },
+  width: {
+    lea_name: 900,
+  },
+})
 ```
