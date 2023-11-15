@@ -1,3 +1,3 @@
-pandas==1.5.3
-plotly==5.9.0
+pandas
+plotly
 SPARQLWrapper
