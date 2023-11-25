@@ -18,7 +18,7 @@
     "href": "fe_landing_page.html",
     "title": "Fatal Encounters in California",
     "section": "",
-    "text": "viewof fe_search = Inputs.search(fe_data, \n{placeholder: \"Enter a name\", \nwidth: 1500,\nlabel: \"Search Fatal Encounter Victims\"\n})\n\nviewof fe_rows = Inputs.table(fe_search, {\n  columns: [\n    'full_name',\n  ],\n  format: {\n    'full_name': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`,\n  },\n  width: {\n    full_name: 900,\n  },\n})"
+    "text": "0     -119.776341\n1     -122.413013\n2     -122.265448\n3     -118.002536\n4     -122.476227\n          ...    \n806   -117.343050\n807   -122.223943\n808   -118.307068\n809   -117.493046\n810   -117.617333\nName: Latitude, Length: 811, dtype: float64\n\n\n\nviewof fe_search = Inputs.search(fe_data, \n{placeholder: \"Enter a name\", \nwidth: 1500,\nlabel: \"Search Fatal Encounter Victims\"\n})\n\nviewof fe_rows = Inputs.table(fe_search, {\n  columns: [\n    'full_name',\n  ],\n  format: {\n    'full_name': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`,\n  },\n  width: {\n    full_name: 900,\n  },\n})"
   },
   {
     "objectID": "about.html",

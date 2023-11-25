@@ -5,9 +5,13 @@ execute:
 ---
 
 ```{python}
-# !pip install SPARQLWrapper
 import sys
 from SPARQLWrapper import SPARQLWrapper, JSON 
+```
+
+```{python}
+# Pull people Wikidata entries 
+
 
 endpoint_url = "https://query.wikidata.org/sparql"
 
@@ -39,6 +43,117 @@ fe_arr = []
 for result in results["results"]["bindings"]:
   fe_arr.append({'full_name': result["givenNameLabel"]["value"] + ' ' + result["familyNameLabel"]["value"]})
 ojs_define(fe_data = fe_arr)
+```
+
+```{python}
+# Pull coordinates and titles of death events
+endpoint_url = "https://query.wikidata.org/sparql"
+
+query = """SELECT ?person ?personLabel ?coordinates
+              WHERE {
+                ?person p:P5008 ?statement0.
+                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
+                ?person p:P585 ?statement_1.
+                ?statement_1 psv:P585 ?statementValue_1.
+                ?statementValue_1 wikibase:timeValue ?P585_1.
+                ?person wdt:P625 ?coordinates.
+                
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        }"""
+
+
+def get_results(endpoint_url, query):
+    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
+    # TODO adjust user agent; see https://w.wiki/CX6
+    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    return sparql.query().convert()
+
+
+results = get_results(endpoint_url, query)["results"]["bindings"]
+```
+
+```{python}
+# !pip install pandas geopandas
+import pandas as pd
+import plotly.express as px
+from urllib.request import urlopen
+import json
+
+# import geopandas as gpd
+# from shapely.geometry import Point
+
+# Create a DataFrame 
+df = pd.DataFrame(results)
+lat = []
+long = []
+coords = df['coordinates'].tolist()
+for row in coords:
+  space = row["value"].index(' ')
+  lat.append(float(row["value"][6:space]))
+  long.append(float(row["value"][space + 1:-1]))
+df['Latitude'] = lat
+df['Longitude'] = long
+# print(df['Latitude'])
+  
+
+fig_scatter_all = px.scatter_mapbox(df, 
+                  lat='Latitude',
+                  lon='Longitude',
+#                   color="Policy_Manual_Exists", 
+                  # hover_name='Name',
+                  # hover_data={ 
+                  #                 'Age': True, 
+                  #                 'Gender': True, 
+                  #                 'Race with imputations': True, 
+                  #                 ' Date of injury resulting in death (month/day/year)': True, 
+                  #                 'Agency or agencies involved': True,
+                  #                 'Latitude':False,
+                  #                 'Longitude': False
+                  #             },
+                  color_continuous_scale=px.colors.cyclical.IceFire, 
+                  size_max=15, 
+                  zoom=10,
+                  mapbox_style="carto-positron")
+
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
+    # ** the file below is hosted locally but I could alternatively write code that removes all the non-CA fip codes from the DF 
+df_counties_ca = pd.read_csv("one_col_raw.githubusercontent.com_plotly_datasets_master_fips-unemp-16.csv",  
+                   dtype={"fips": str})
+
+fig_ca_counties = px.choropleth_mapbox(df_counties_ca, 
+                           geojson=counties, 
+                           locations='fips',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 12),
+                           mapbox_style="carto-positron",
+                           zoom=4.7, 
+                           center = {"lat": 37.0902, "lon": -120.7129},
+                           opacity=0.5,
+                          )
+
+fig_ca_counties.update_geos(fitbounds="locations", visible=False)
+fig_ca_counties.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+fig_ca_counties.add_trace(
+    fig_scatter.data[0]
+)
+
+# Create a GeoDataFrame by converting Latitude and Longitude to a geometry column
+# geometry = [Point(lon, lat) for lon, lat in zip(df['Longitude'], df['Latitude'])]
+# gdf = gpd.GeoDataFrame(df, geometry=df['coordinates'])
+
+# # Convert to GeoJSON
+# geojson_data = gdf.to_crs(epsg='4326').to_json()
+
+# # Print or use the GeoJSON data as needed
+# print(geojson_data) 
+# convert results into GeoJSON format for mapping 
+# fe_coor_arr = []
+# for result in results["results"]["bindings"]:
+#   fe_arr.append({'full_name': result["givenNameLabel"]["value"] + ' ' + result["familyNameLabel"]["value"]})
+# ojs_define(fe_data = fe_arr)
 ```
 
 ```{ojs}
