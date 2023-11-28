@@ -11,14 +11,14 @@
     "href": "lea_landing_page.html",
     "title": "Law Enforcement Agencies",
     "section": "",
-    "text": "{title}"
+    "text": "viewof lea_search = Inputs.search(lea_data, \n{placeholder: \"Enter a LEA name\", \nwidth: 1500,\nlabel: \"Search Law Enforcement Agencies\"\n})\n\nviewof fe_rows = Inputs.table(lea_search, {\n  columns: [\n    'lea_name',\n  ],\n  format: {\n    'lea_name': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`,\n  },\n  width: {\n    lea_name: 900,\n  },\n})"
   },
   {
     "objectID": "fe_landing_page.html",
     "href": "fe_landing_page.html",
     "title": "Fatal Encounters in California",
     "section": "",
-    "text": "viewof fe_search = Inputs.search(fe_data, \n{placeholder: \"Enter a name\", \nwidth: 1500,\nlabel: \"Search Fatal Encounter Victims\"\n})\n\nviewof fe_rows = Inputs.table(fe_search, {\n  columns: [\n    'full_name',\n  ],\n  format: {\n    'full_name': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`,\n  },\n  width: {\n    full_name: 900,\n  },\n})"
+    "text": "viewof fe_search = Inputs.search(fe_data, \n{placeholder: \"Enter a name\", \nwidth: 1500,\nlabel: \"Search Fatal Encounter Victims\"\n})\nviewof fe_rows = Inputs.table(fe_search, {\n  columns: [\n    'full_name',\n  ],\n  format: {\n    'full_name': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`,\n  },\n  width: {\n    full_name: 900,\n  },\n})"
   },
   {
     "objectID": "about.html",
