@@ -1,3 +1,4 @@
 ---
 title: "Map View"
+css: "/assets/dist/css/bootstrap.min.css"
 ---

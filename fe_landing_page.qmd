@@ -2,11 +2,16 @@
 title: "Fatal Encounters in California"
 execute:
   echo: false
+css: "/assets/dist/css/bootstrap.min.css"
 ---
 
 ```{python}
 import sys
 from SPARQLWrapper import SPARQLWrapper, JSON 
+import pandas as pd
+import plotly.express as px
+from urllib.request import urlopen
+import json
 ```
 
 ```{python}
@@ -76,10 +81,7 @@ results = get_results(endpoint_url, query)["results"]["bindings"]
 
 ```{python}
 # !pip install pandas geopandas
-import pandas as pd
-import plotly.express as px
-from urllib.request import urlopen
-import json
+
 
 # import geopandas as gpd
 # from shapely.geometry import Point
@@ -89,20 +91,29 @@ df = pd.DataFrame(results)
 lat = []
 long = []
 coords = df['coordinates'].tolist()
-for row in coords:
-  space = row["value"].index(' ')
-  lat.append(float(row["value"][6:space]))
-  long.append(float(row["value"][space + 1:-1]))
+# labels = df["personLabel"].tolist()
+# names = []
+for i in range(len(coords)):
+  space = coords[i]["value"].index(' ')
+  long.append(float(coords[i]["value"][6:space]))
+  lat.append(float(coords[i]["value"][space + 1:-1]))
+  # names.append(labels[i]["value"][9:])
 df['Latitude'] = lat
 df['Longitude'] = long
-# print(df['Latitude'])
+# df["personLabel"] = names
+
+# isolate victim name from Wikidata label
+def isolate_person_name(entry): 
+  return entry["value"][9:]
+df["personLabel"] = df["personLabel"].map(isolate_person_name)
+# print(df['Latitude'], df['Longitude'], df["personLabel"])
   
 
-fig_scatter_all = px.scatter_mapbox(df, 
+fig_scatter = px.scatter_mapbox(df, 
                   lat='Latitude',
                   lon='Longitude',
 #                   color="Policy_Manual_Exists", 
-                  # hover_name='Name',
+                  hover_name= df["personLabel"],
                   # hover_data={ 
                   #                 'Age': True, 
                   #                 'Gender': True, 
@@ -136,24 +147,21 @@ fig_ca_counties = px.choropleth_mapbox(df_counties_ca,
 
 fig_ca_counties.update_geos(fitbounds="locations", visible=False)
 fig_ca_counties.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+# fig_ca_counties.update_layout(hovermode='None')
 fig_ca_counties.add_trace(
     fig_scatter.data[0]
 )
 
-# Create a GeoDataFrame by converting Latitude and Longitude to a geometry column
-# geometry = [Point(lon, lat) for lon, lat in zip(df['Longitude'], df['Latitude'])]
-# gdf = gpd.GeoDataFrame(df, geometry=df['coordinates'])
-
-# # Convert to GeoJSON
-# geojson_data = gdf.to_crs(epsg='4326').to_json()
-
-# # Print or use the GeoJSON data as needed
-# print(geojson_data) 
-# convert results into GeoJSON format for mapping 
-# fe_coor_arr = []
-# for result in results["results"]["bindings"]:
-#   fe_arr.append({'full_name': result["givenNameLabel"]["value"] + ' ' + result["familyNameLabel"]["value"]})
-# ojs_define(fe_data = fe_arr)
+# customize hover label appearance
+fig_ca_counties.update_layout(
+    hoverlabel=dict(
+        bgcolor="white",
+        font_size=12,
+        font_family="Rockwell"
+    )
+)
+# fig_scatter.show()
+# fig_ca_counties.show()
 ```
 
 ```{ojs}

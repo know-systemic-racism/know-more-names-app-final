@@ -2,24 +2,246 @@
 title: "Law Enforcement Agencies"
 execute: 
     echo: false
+css: "/assets/dist/css/bootstrap.min.css"
 ---
+```{=HTML}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.112.5">
+  <title>{title}</title>
+  <script src="../assets/js/color-modes.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet"/>
+<!-- <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet"> -->    
+</head>
 
+<body>
+  <main>
+  <div id="map" class=""></div>
+  </main>
+  <script>
+  class SPARQLQueryDispatcher {
+    constructor( endpoint ) {
+      this.endpoint = endpoint;
+    }
+
+    query( sparqlQuery ) {
+      const fullUrl = this.endpoint + '?query=' + encodeURIComponent( sparqlQuery );
+      const headers = { 'Accept': 'application/sparql-results+json' };
+
+      return fetch( fullUrl, { headers } ).then( body => body.json() );
+    }
+  }
+
+  const endpointUrl = 'https://query.wikidata.org/sparql';
+  // query for death event, retrieving title of death event and coordinate location 
+  const sparqlQuery = `   SELECT ?person ?personLabel ?coordinates
+  WHERE {
+    ?person p:P5008 ?statement0.
+    ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
+    ?person p:P585 ?statement_1.
+    ?statement_1 psv:P585 ?statementValue_1.
+    ?statementValue_1 wikibase:timeValue ?P585_1.
+    ?person wdt:P625 ?coordinates.
+    
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+  }`;
+
+  const queryDispatcher = new SPARQLQueryDispatcher( endpointUrl );
+  queryDispatcher.query( sparqlQuery ).then( res => {
+    const result = res["results"]["bindings"];
+    console.log(result)
+    let geoJsonData = {
+                        "type": "FeatureCollection",
+                        "name": "fatal_encounters_data",
+                        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4269" } },
+                        "features": []
+                      }
+    for (let event of result) {
+      let length = event["coordinates"]["value"].length;
+      let pt_coordinates = event["coordinates"]["value"].substring(6, length - 1);
+      let space = pt_coordinates.indexOf(" ");
+      let lat = pt_coordinates.substring(0, space);
+      let long = pt_coordinates.substring(space + 1);
+      console.log(long, lat)
+
+      geoJsonData.features.push({
+                                  "type": "Feature",
+                                  "properties": {
+                                                  "Person Name": event["personLabel"]["value"].substring(9)
+                                                },
+                                  "geometry": {
+                                                  "type": "Point", 
+                                                  "coordinates": [parseInt(lat), parseInt(long)]
+                                              }
+                                })
+    }
+    console.log(geoJsonData)
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYWNvbG1lbmEiLCJhIjoiY2xsNGFibXozMDN3aTNybXo5dXllNTRxZCJ9.UBmukDP6IwkHjOkz5VmILA';
+      const map = new mapboxgl.Map({
+          container: 'map',
+          // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+          style: 'mapbox://styles/mapbox/dark-v11',
+          center: [-119.1917, 36.6699],
+          zoom: 4.4
+      });
+
+      map.on('load', () => {
+          // Add a new source from our GeoJSON data and
+          // set the 'cluster' option to true. GL-JS will
+          // add the point_count property to your source data.
+          map.addSource('geoJsonData', {
+              type: 'geojson',
+              // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
+              // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
+              data: geoJsonData,
+              cluster: true,
+              clusterMaxZoom: 14, // Max zoom to cluster points on
+              clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+          });
+
+          map.addLayer({
+              id: 'clusters',
+              type: 'circle',
+              source: 'geoJsonData',
+              filter: ['has', 'point_count'],
+              paint: {
+                  // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+                  // with three steps to implement three types of circles:
+                  //   * Blue, 20px circles when point count is less than 100
+                  //   * Yellow, 30px circles when point count is between 100 and 750
+                  //   * Pink, 40px circles when point count is greater than or equal to 750
+                  'circle-color': [
+                      'step',
+                      ['get', 'point_count'],
+                      '#51bbd6',
+                      100,
+                      '#f1f075',
+                      750,
+                      '#f28cb1'
+                  ],
+                  'circle-radius': [
+                      'step',
+                      ['get', 'point_count'],
+                      20,
+                      100,
+                      30,
+                      750,
+                      40
+                  ]
+              }
+          });
+
+          map.addLayer({
+              id: 'cluster-count',
+              type: 'symbol',
+              source: 'geoJsonData',
+              filter: ['has', 'point_count'],
+              layout: {
+                  'text-field': ['get', 'point_count_abbreviated'],
+                  'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                  'text-size': 12
+              }
+          });
+
+          map.addLayer({
+              id: 'unclustered-point',
+              type: 'circle',
+              source: 'geoJsonData',
+              filter: ['!', ['has', 'point_count']],
+              paint: {
+                  'circle-color': '#11b4da',
+                  'circle-radius': 4,
+                  'circle-stroke-width': 1,
+                  'circle-stroke-color': '#fff'
+              }
+          });
+
+          // inspect a cluster on click
+          map.on('click', 'clusters', (e) => {
+              const features = map.queryRenderedFeatures(e.point, {
+                  layers: ['clusters']
+              });
+              const clusterId = features[0].properties.cluster_id;
+              map.getSource('geoJsonData').getClusterExpansionZoom(
+                  clusterId,
+                  (err, zoom) => {
+                      if (err) return;
+
+                      map.easeTo({
+                          center: features[0].geometry.coordinates,
+                          zoom: zoom
+                      });
+                  }
+              );
+          });
+
+          // When a click event occurs on a feature in
+          // the unclustered-point layer, open a popup at
+          // the location of the feature, with
+          // description HTML from its properties.
+          map.on('click', 'unclustered-point', (e) => {
+              const coordinates = e.features[0].geometry.coordinates.slice();
+              const name = e.features[0].properties["Person Name"];
+
+              // Ensure that if the map is zoomed out such that
+              // multiple copies of the feature are visible, the
+              // popup appears over the copy being pointed to.
+              while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+              }
+
+              new mapboxgl.Popup()
+                  .setLngLat(coordinates)
+                  .setHTML(
+                      `Name: ${name}<br>`
+                  )
+                  .addTo(map);
+          });
+
+          map.on('mouseenter', 'clusters', () => {
+              map.getCanvas().style.cursor = 'pointer';
+          });
+          map.on('mouseleave', 'clusters', () => {
+              map.getCanvas().style.cursor = '';
+          });
+      });
+    
+  });
+  </script>
+</body>
+
+```
+<!-- 
 ```{python}
 import sys
 from SPARQLWrapper import SPARQLWrapper, JSON
+import pandas as pd
+import plotly.express as px
+from urllib.request import urlopen
+import json
+```
 
+```{python}
 endpoint_url = "https://query.wikidata.org/sparql"
 
 query = """
-        SELECT DISTINCT ?item ?itemLabel WHERE {
+        SELECT DISTINCT ?item ?itemLabel ?coordinates WHERE {
             SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
             {
-                SELECT DISTINCT ?item ?itemLabel WHERE {
+     
                 ?item p:P5008 ?statement0.
                 ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
                 ?item p:P31 ?statement1.
                 ?statement1 (ps:P31/(wdt:P279*)) wd:Q732717.
-                } 
+                ?item wdt:P625 ?coordinates.
+             
             }
         }"""
 
@@ -32,14 +254,84 @@ def get_results(endpoint_url, query):
     sparql.setReturnFormat(JSON)
     return sparql.query().convert()
 
+# API results
+results = get_results(endpoint_url, query)["results"]["bindings"]
 
-results = get_results(endpoint_url, query)
-
-lea_data = []
-for result in results["results"]["bindings"]:
-    lea_data.append({'lea_name': result["itemLabel"]["value"]})
-ojs_define(lea_data = lea_data)
+# lea_data = []
+# for result in results["results"]["bindings"]:
+#     lea_data.append({'lea_name': result["itemLabel"]["value"]})
+# 
+def isolate_values(entry):
+  return entry["value"]
+df = pd.DataFrame(results)
+df["itemLabel"] = df["itemLabel"].apply(isolate_values)
+ojs_define(lea_data = df["itemLabel"].tolist())
 ``` 
+
+```{python}
+# Map LEA data
+lat = []
+long = []
+coords = df['coordinates'].tolist()
+for i in range(len(coords)):
+  space = coords[i]["value"].index(' ')
+  lat.append(float(coords[i]["value"][6:space]))
+  long.append(float(coords[i]["value"][space + 1:-1]))
+df['Latitude'] = lat
+df['Longitude'] = long  
+
+fig_scatter = px.scatter_mapbox(df, 
+                  lat='Latitude',
+                  lon='Longitude',
+                  hover_name= df["itemLabel"],
+                  # hover_data={ 
+                  #                 'Age': True, 
+                  #                 'Gender': True, 
+                  #                 'Race with imputations': True, 
+                  #                 ' Date of injury resulting in death (month/day/year)': True, 
+                  #                 'Agency or agencies involved': True,
+                  #                 'Latitude':False,
+                  #                 'Longitude': False
+                  #             },
+                  color_continuous_scale=px.colors.cyclical.IceFire, 
+                  size_max=15, 
+                  zoom=10,
+                  mapbox_style="carto-positron")
+
+with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+    counties = json.load(response)
+    # ** the file below is hosted locally but I could alternatively write code that removes all the non-CA fip codes from the DF 
+df_counties_ca = pd.read_csv("one_col_raw.githubusercontent.com_plotly_datasets_master_fips-unemp-16.csv",  
+                   dtype={"fips": str})
+
+fig_ca_counties = px.choropleth_mapbox(df_counties_ca, 
+                           geojson=counties, 
+                           locations='fips',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 12),
+                           mapbox_style="carto-positron",
+                           zoom=4.7, 
+                           center = {"lat": 37.0902, "lon": -120.7129},
+                           opacity=0.5,
+                          )
+
+fig_ca_counties.update_geos(fitbounds="locations", visible=False)
+fig_ca_counties.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+fig_ca_counties.add_trace(
+    fig_scatter.data[0]
+)
+
+# customize hover label appearance
+fig_ca_counties.update_layout(
+    hoverlabel=dict(
+        bgcolor="white",
+        font_size=12,
+        font_family="Rockwell"
+    )
+)
+# fig_scatter.show()
+# fig_ca_counties.show()
+```
 
 ```{ojs}
 viewof lea_search = Inputs.search(lea_data, 
@@ -59,4 +351,4 @@ viewof fe_rows = Inputs.table(lea_search, {
     lea_name: 900,
   },
 })
-```
+``` -->
