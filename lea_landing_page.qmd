@@ -132,10 +132,41 @@ viewof fe_rows = Inputs.table(lea_search, {
     'lea_name',
   ],
   format: {
-    'lea_name': x => htl.html`<a href=${x} target=_blank>${x}</a>`,
+    'lea_name': x => htl.html`<button type="button" class="leas">${x}</button>`,
   },
   width: {
     lea_name: 900,
   },
+//   height: { 
+
+//   }
 })
+```
+
+```{=HTML}
+<!-- add event listeners to buttons -->
+<script>
+    // 1) Event listener for buttons
+    // select element 
+    let lea_buttons = document.querySelectorAll('.leas');
+    const outputCells = document.querySelectorAll('.cell');
+    const tableCell = outputCells[2];
+
+    lea_buttons.forEach((btn) => {
+        btn.addEventListener("click", myFunction);
+    });
+
+    function myFunction() {
+        // hide table
+        tableCell.style.display = 'none';
+        // show content for only the element clicked
+
+        // highlight correct LEA spot on plotly map 
+
+        // show back arrow button that will show the map as before and the table of all LEAs
+
+    }
+
+    // 2) Event listener for back arrow button
+</script>
 ```

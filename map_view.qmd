@@ -1,4 +1,104 @@
 ---
 title: "Map View"
+execute:
+    echo: false
 css: "/assets/dist/css/bootstrap.min.css"
 ---
+
+```{python}
+import sys
+from SPARQLWrapper import SPARQLWrapper, JSON
+import pandas as pd
+```
+
+```{python}
+endpoint_url = "https://query.wikidata.org/sparql"
+
+query = """
+        SELECT DISTINCT ?item ?itemLabel ?coordinates WHERE {
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+            {
+                ?item p:P5008 ?statement0.
+                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
+                ?item p:P31 ?statement1.
+                ?statement1 (ps:P31/(wdt:P279*)) wd:Q732717.
+                ?item wdt:P625 ?coordinates.
+            }
+        }"""
+
+
+def get_results(endpoint_url, query):
+    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
+    # TODO adjust user agent; see https://w.wiki/CX6
+    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    return sparql.query().convert()
+
+# API results
+results = get_results(endpoint_url, query)["results"]["bindings"]
+geoJsonLeas = {
+                "type": "FeatureCollection",
+                "name": "lea_data",
+                "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4269" } },
+                "features": []
+              }
+for result in results:
+    length = len(result["coordinates"]["value"])
+    pt_coordinates = result["coordinates"]["value"][6: length - 1]
+    # print(pt_coordinates)
+    space = pt_coordinates.index(" ")
+    # print(space)
+    lat = pt_coordinates[0 : space]
+    long = pt_coordinates[space + 1:]
+    # print(lat, len(lat))
+    # print(long, len(long))
+
+    geoJsonLeas["features"].append({
+                                "type": "Feature",
+                                "properties": {
+                                                "LEA Name": result["itemLabel"]["value"][9:]
+                                              },
+                                "geometry": {
+                                                "type": "Point", 
+                                                "coordinates": [float(lat), float(long)]
+                                            }
+                              })
+ojs_define(leas = geoJsonLeas)
+```
+
+```{ojs}
+// import libraries
+import {us} from "@observablehq/us-geographic-data"
+countiesFile = FileAttachment("ca_counties_geoverview.json").json()
+counties = topojson.feature(countiesFile, countiesFile.objects.counties)
+states = topojson.feature(us, us.objects.states)
+```
+
+```{ojs}
+Plot.plot({
+  // inset: 1000,
+  // insetLeft: 1000,
+  // // insetBottom: 1000,
+  // width:10000,
+  width: 688,
+  height: 688,
+  projection: ({width, height}) => d3
+              .geoMercator()
+              .center([-119, 37.4])
+              .scale((1 << 18) / (28 * Math.PI))
+              .translate([320, 320]),
+  marks: [
+    Plot.geo(counties, { strokeOpacity: 0.8 }),
+    Plot.geo(states, { strokeOpacity: 0.3 }),
+    Plot.geo(leas, {
+     fill: "blue",
+     fillOpacity: 0.2,
+     stroke: "blue",
+     title: (d) => d.properties.LEA_Name,
+     href: (d) => d.properties.Site,
+     target: "_blank"
+   })
+  ]
+})
+```

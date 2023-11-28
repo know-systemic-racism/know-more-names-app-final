@@ -155,7 +155,7 @@ viewof fe_rows = Inputs.table(fe_search, {
     'full_name',
   ],
   format: {
-    'full_name': x => htl.html`<a href=${x} target=_blank>${x}</a>`,
+    'full_name': x => htl.html`<button type="button" class="leas btn btn-sm btn-outline-secondary">${x}</button>`,
   },
   width: {
     full_name: 900,
