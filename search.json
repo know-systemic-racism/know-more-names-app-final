@@ -18,14 +18,21 @@
     "href": "lea_landing_page.html",
     "title": "Law Enforcement Agencies",
     "section": "",
-    "text": "viewof lea_search = Inputs.search(lea_data, \n{placeholder: \"Enter a LEA name\", \nwidth: 1500,\nlabel: \"Search Law Enforcement Agencies\"\n})\n\nviewof fe_rows = Inputs.table(lea_search, {\n  columns: [\n    'lea_name',\n  ],\n  format: {\n    'lea_name': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`,\n  },\n  width: {\n    lea_name: 900,\n  },\n})"
+    "text": "viewof lea_search = Inputs.search(lea_data, \n{placeholder: \"Enter a LEA name\", \nwidth: 1500,\nlabel: \"Search Law Enforcement Agencies\"\n})\n\nviewof fe_rows = Inputs.table(lea_search, {\n  columns: [\n    'lea_name',\n  ],\n  format: {\n    'lea_name': x =&gt; htl.html`&lt;button type=\"button\" class=\"leas\"&gt;${x}&lt;/button&gt;`,\n  },\n  width: {\n    lea_name: 900,\n  },\n//   height: { \n\n//   }\n})"
+  },
+  {
+    "objectID": "map_view.html",
+    "href": "map_view.html",
+    "title": "Map View",
+    "section": "",
+    "text": "import {us} from \"@observablehq/us-geographic-data\"\ncountiesFile = FileAttachment(\"ca_counties_geoverview.json\").json()\ncounties = topojson.feature(countiesFile, countiesFile.objects.counties)\nstates = topojson.feature(us, us.objects.states)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlot.plot({\n  // inset: 1000,\n  // insetLeft: 1000,\n  // // insetBottom: 1000,\n  // width:10000,\n  width: 688,\n  height: 688,\n  projection: ({width, height}) =&gt; d3\n              .geoMercator()\n              .center([-119, 37.4])\n              .scale((1 &lt;&lt; 18) / (28 * Math.PI))\n              .translate([320, 320]),\n  marks: [\n    Plot.geo(counties, { strokeOpacity: 0.8 }),\n    Plot.geo(states, { strokeOpacity: 0.3 }),\n    Plot.geo(leas, {\n     fill: \"blue\",\n     fillOpacity: 0.2,\n     stroke: \"blue\",\n     title: (d) =&gt; d.properties.LEA_Name,\n     href: (d) =&gt; d.properties.Site,\n     target: \"_blank\"\n   })\n  ]\n})"
   },
   {
     "objectID": "fe_landing_page.html",
     "href": "fe_landing_page.html",
     "title": "Fatal Encounters in California",
     "section": "",
-    "text": "viewof fe_search = Inputs.search(fe_data, \n{placeholder: \"Enter a name\", \nwidth: 1500,\nlabel: \"Search Fatal Encounter Victims\"\n})\nviewof fe_rows = Inputs.table(fe_search, {\n  columns: [\n    'full_name',\n  ],\n  format: {\n    'full_name': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`,\n  },\n  width: {\n    full_name: 900,\n  },\n})"
+    "text": "viewof fe_search = Inputs.search(fe_data, \n{placeholder: \"Enter a name\", \nwidth: 1500,\nlabel: \"Search Fatal Encounter Victims\"\n})\nviewof fe_rows = Inputs.table(fe_search, {\n  columns: [\n    'full_name',\n  ],\n  format: {\n    'full_name': x =&gt; htl.html`&lt;button type=\"button\" class=\"leas btn btn-sm btn-outline-secondary\"&gt;${x}&lt;/button&gt;`,\n  },\n  width: {\n    full_name: 900,\n  },\n})"
   },
   {
     "objectID": "index.html",
