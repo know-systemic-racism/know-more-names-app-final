@@ -20,3 +20,11 @@ body {
 #quarto-search {
     color: #E9E9E9;
 }
+
+.oi-ec050e-table tr:not(:last-child) td, .oi-ec050e-table tr:not(:last-child) th {
+    border-bottom: none;
+}
+
+.options button {
+    background-color: #EDD869;
+}
