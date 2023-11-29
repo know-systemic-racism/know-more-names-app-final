@@ -17,13 +17,12 @@ import json
 # Pull people Wikidata entries 
 
 endpoint_url = "https://query.wikidata.org/sparql"
-query = """SELECT ?person ?givenNameLabel ?familyNameLabel ?placeOfDeathLabel  
+query = """SELECT ?person ?personLabel ?placeOfDeathLabel ?killedBy
       WHERE
       {
         ?person wdt:P5008 wd:Q120754096.
-        ?person wdt:P735 ?givenName.
-        ?person wdt:P734 ?familyName.
         ?person wdt:P20 ?placeOfDeath.
+     
         SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
       }"""
 
@@ -34,13 +33,13 @@ def get_results(endpoint_url, query):
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     return sparql.query().convert()
-
+```
+```{python}
+# Process API results
 results = get_results(endpoint_url, query)
-# for result in results["results"]["bindings"]:
-#     print(result["givenNameLabel"]["value"], result["familyNameLabel"]["value"])  # print names of victims
 fe_arr = []
 for result in results["results"]["bindings"]:
-  fe_arr.append({'full_name': result["givenNameLabel"]["value"] + ' ' + result["familyNameLabel"]["value"]})
+  fe_arr.append({'full_name': result["personLabel"]["value"]})
 ojs_define(fe_data = fe_arr)
 ```
 ```{python}

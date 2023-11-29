@@ -19,6 +19,30 @@ terms_df = pd.read_csv(url)
 ```
 
 ```{python}
-print(terms_df['Term'])
+results = []
+terms = terms_df['Term'].tolist()
+for term in terms:
+    results.append({'term': str(term)})
+ojs_define(data = results)
+```
+
+```{ojs}
+viewof policy_trm_search = Inputs.search(data, 
+{placeholder: "Enter a Policy Term", 
+width: 1500,
+label: "Search Policy Terms"
+})
+
+viewof pol_terms_rows = Inputs.table(policy_trm_search, {
+  columns: [
+    'term',
+  ],
+  format: {
+    'term': x => htl.html`<button type="button" class="leas btn btn-sm btn-outline-secondary">${x}</button>`,
+  },
+  width: { 
+    term: 900,
+  },
+})
 ```
 

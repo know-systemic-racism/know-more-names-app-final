@@ -23,6 +23,7 @@ for sheet_id in lea_codes:
     url = f"https://docs.google.com/spreadsheets/d/{sheet_name}/gviz/tq?tqx=out:csv&sheet={sheet_id}"
     complete_df = pd.read_csv(url)
     just_equip_names = complete_df['Equipment name / Description']
+    category = complete_df['Equipment Type / Category']
     dfs.append(just_equip_names)
     i += 1
 all_mil_equip = pd.concat(dfs)
@@ -33,17 +34,32 @@ all_mil_equip = pd.concat(dfs)
 # get rid of all repeat names in column/df
 no_dupes = all_mil_equip.drop_duplicates()
 results = []
+no_dupes = no_dupes.tolist()
+general_names = ['Launcher', 'Ammunition', 'Canister', 'Flashbang', 'Taser Shockwave', 'Long Range Acoustic Device']
 for mil_equip in no_dupes:
-    results.append({'name': mil_equip})
+    results.append({'name': str(mil_equip)})
+    # print(type(mil_equip)) 
+    # for gen_name in general_names:
+    #   print(type(gen_name))
+    #   if gen_name in mil_equip:
+    #     results.append({
+    #                       'general_name': gen_name, 
+    #                       'specific_name': mil_equip
+    #                   })
+    #   else:
+    #     results.append({
+    #                       'general_name': 'Not within general_names list', 
+    #                       'specific_name': mil_equip
+    #                   })
 
-print(results)
-ojs_define(mil_equip_data = results)
+# print(results)
+ojs_define(data = results)
 ```
 
 
 
 ```{ojs}
-viewof mil_equip_search = Inputs.search(mil_equip_data, 
+viewof mil_equip_search = Inputs.search(data, 
 {placeholder: "Enter a Military Equipment Name", 
 width: 1500,
 label: "Search Military Equipment"
@@ -54,7 +70,7 @@ viewof mil_equip_rows = Inputs.table(mil_equip_search, {
     'name',
   ],
   format: {
-    'name': x => htl.html`<a href=${x} target=_blank>${x}</a>`,
+    'name': x => htl.html`<button type="button" class="leas btn btn-sm btn-outline-secondary">${x}</button>`,
   },
   width: { 
     name: 900,

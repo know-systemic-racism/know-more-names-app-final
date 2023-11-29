@@ -143,7 +143,7 @@ viewof fe_rows = Inputs.table(lea_search, {
 })
 ```
 
-```{=HTML}
+```{=html}
 <!-- add event listeners to buttons -->
 <script>
     // 1) Event listener for buttons
