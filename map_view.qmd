@@ -2,103 +2,241 @@
 title: "Map View"
 execute:
     echo: false
-css: "/assets/dist/css/bootstrap.min.css"
+# css: "/assets/dist/css/bootstrap.min.css" 
 ---
 
+### Fatal Encounters
 ```{python}
-import sys
-from SPARQLWrapper import SPARQLWrapper, JSON
 import pandas as pd
+import plotly.express as px
+from urllib.request import urlopen
+import json
 ```
 
 ```{python}
-endpoint_url = "https://query.wikidata.org/sparql"
+sheet_id = "1dKmaV_JiWcG8XBoRgP8b4e9Eopkpgt7FL7nyspvzAsE"
+sheet_name = "sample_1"
+url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+df = pd.read_csv(url)
+ojs_define(fe_data = df)
 
-query = """
-        SELECT DISTINCT ?item ?itemLabel ?coordinates WHERE {
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-            {
-                ?item p:P5008 ?statement0.
-                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
-                ?item p:P31 ?statement1.
-                ?statement1 (ps:P31/(wdt:P279*)) wd:Q732717.
-                ?item wdt:P625 ?coordinates.
-            }
-        }"""
+df['Age'].fillna('Not in Fatal Encounters dataset')
+df_ca_only = df.loc[df['State'] == 'CA']
 
+```
 
-def get_results(endpoint_url, query):
-    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
-    # TODO adjust user agent; see https://w.wiki/CX6
-    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    return sparql.query().convert()
-
-# API results
-results = get_results(endpoint_url, query)["results"]["bindings"]
-geoJsonLeas = {
-                "type": "FeatureCollection",
-                "name": "lea_data",
-                "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4269" } },
-                "features": []
-              }
-for result in results:
-    length = len(result["coordinates"]["value"])
-    pt_coordinates = result["coordinates"]["value"][6: length - 1]
-    # print(pt_coordinates)
-    space = pt_coordinates.index(" ")
-    # print(space)
-    lat = pt_coordinates[0 : space]
-    long = pt_coordinates[space + 1:]
-    # print(lat, len(lat))
-    # print(long, len(long))
-
-    geoJsonLeas["features"].append({
-                                "type": "Feature",
-                                "properties": {
-                                                "LEA Name": result["itemLabel"]["value"][9:]
-                                              },
-                                "geometry": {
-                                                "type": "Point", 
-                                                "coordinates": [float(lat), float(long)]
-                                            }
-                              })
-ojs_define(leas = geoJsonLeas)
+### California Only
+```{ojs}
+ca_only = transpose(fe_data).filter(function(p) {
+  return p.State === 'CA';
+})
+```
+```{ojs}
+viewof fe_ca_search_all_cols = Inputs.search(ca_only, 
+{placeholder: "Enter a name, zip code, county, city, or police department name", 
+width: 900,
+label: "Search FE Data (CA only)"
+})
 ```
 
 ```{ojs}
-// import libraries
-import {us} from "@observablehq/us-geographic-data"
-countiesFile = FileAttachment("ca_counties_geoverview.json").json()
-counties = topojson.feature(countiesFile, countiesFile.objects.counties)
-states = topojson.feature(us, us.objects.states)
+viewof fe_rows_ca_all_cols = Inputs.table(fe_ca_search_all_cols, 
+{
+  columns: [
+    'Unique ID',
+    'Name',
+    'Age',
+    'Gender',
+    'Race',
+    'Race with imputations',
+    'Imputation probability',
+    'URL of image (PLS NO HOTLINKS)',
+    ' Date of injury resulting in death (month/day/year)',
+    'Location of injury (address)',
+    'Location of death (city)',
+    'State',
+    'Location of death (zip code)',
+    'Location of death (county)',
+    'Full Address',
+    'Latitude',
+    'Longitude',
+    'Agency or agencies involved',
+    'Highest level of force',
+    'UID Temporary',
+    'Name Temporary',
+    'Armed/Unarmed',
+    'Alleged weapon',
+    'Aggressive physical movement',
+    'Fleeing/Not fleeing',
+    'Description Temp',
+    'URL Temp',
+    'Brief description',
+    'Intended use of force (Developing)',
+    'Supporting document link',
+  ],
+  format: {
+    'Unique ID': x => x.toFixed(0),
+    'Location of death (zip code)': x => x.toFixed(0),
+    'Supporting document link': x => htl.html`<a href=${x} target=_blank>${x}</a>`,
+    'URL of image (PLS NO HOTLINKS)': x => htl.html`<a href=${x} target=_blank>${x}</a>`
+  },
+} 
+)
+```
+
+```{ojs}
+abbreviated_states_obj = ({
+  AL: 'Alabama',
+  AK: 'Alaska' ,
+  AS: 'American Samoa',
+  AZ: 'Arizona',
+  AR: 'Arkansas',
+  CA: 'California',
+  CO: 'Colorado',
+  CT: 'Connecticut',
+  DE: 'Delaware',
+  DC: 'District of Columbia',
+  FL: 'Florida',
+  GA: 'Georgia',
+  GU: 'Guam',
+  HI: 'Hawaii',
+  ID: 'Idaho',
+  IL: 'Illinois',
+  IN: 'Indiana',
+  IA: 'Iowa',
+  KS: 'Kansas',
+  KY: 'Kentucky',
+  LA: 'Louisiana',
+  ME: 'Maine',
+  MD: 'Maryland',
+  MA: 'Massachusetts',
+  MI: 'Michigan',
+  MN: 'Minnesota',
+  MS: 'Mississippi',
+  MO: 'Missouri',
+  MT: 'Montana',
+  NE: 'Nebraska',
+  NV: 'Nevada',
+  NH: 'New Hampshire',
+  NJ: 'New Jersey',
+  NM: 'New Mexico',
+  NY: 'New York',
+  NC: 'North Carolina',
+  ND: 'North Dakota',
+  OH: 'Ohio',
+  OK: 'Oklahoma',
+  OR: 'Oregon',
+  PA: 'Pennsylvania',
+  PR: 'Puerto Rico',
+  RI: 'Rhode Island',
+  SC: 'South Carolina',
+  SD: 'South Dakota',
+  TN: 'Tennessee',
+  TX: 'Texas',
+  UT: 'Utah',
+  VT: 'Vermont',
+  VI: 'Virgin Islands',
+  VA: 'Virginia',
+  WA: 'Washington',
+  WV: 'West Virginia',
+  WI: 'Wisconsin',
+  WY: 'Wyoming',
+})
+tidy_w_race = transpose(fe_data).map(d => ({date: new Date(d[' Date of injury resulting in death (month/day/year)']).getFullYear(), count: 1, raceImputed: d['Race with imputations'], race: d.Race, state: abbreviated_states_obj[d.State]}))
+```
+
+## Preliminary FE Data Visualizations
+### Entire U.S.
+The plot below visualizes the number of fatal encounters per year for all of the United States.
+
+```{ojs}
+viewof race_imputed = Inputs.radio(new Map([["Race with imputations", 'raceImputed'], ["Race with no imputations", 'race']]), {value: 'raceImputed', label: "Race imputed?"})
 ```
 
 ```{ojs}
 Plot.plot({
-  // inset: 1000,
-  // insetLeft: 1000,
-  // // insetBottom: 1000,
-  // width:10000,
-  width: 688,
-  height: 688,
-  projection: ({width, height}) => d3
-              .geoMercator()
-              .center([-119, 37.4])
-              .scale((1 << 18) / (28 * Math.PI))
-              .translate([320, 320]),
+  width: 928,
+  height: 500,
+  x: {tickFormat: ""},
+  y: {tickSpacing: 50},
+  color: {legend: true},
   marks: [
-    Plot.geo(counties, { strokeOpacity: 0.8 }),
-    Plot.geo(states, { strokeOpacity: 0.3 }),
-    Plot.geo(leas, {
-     fill: "blue",
-     fillOpacity: 0.2,
-     stroke: "blue",
-     title: (d) => d.properties.LEA_Name,
-     href: (d) => d.properties.Site,
-     target: "_blank"
-   })
+  Plot.barY(tidy_w_race, {x: 'date', y: 'count', fill: race_imputed, sort: race_imputed}),
+  ]
+})
+```
+The plot below visualizes the number of fatal encounters per year for all of the United States separated by state.
+```{ojs}
+tidy_no_race = tidy_w_race.map(d => ({date: d.date, count: d.count, state: d.state}))
+```
+```{ojs}
+viewof fe_search_by_state = Inputs.checkbox(d3.group(tidy_no_race, p => p.state), {key: ['California', 'Georgia'], sort: "ascending", label: html`<b>Select 1 or more states</b>`})
+```
+
+```{ojs}
+Plot.plot({
+  width: 928,
+  height: 500,
+  x: {tickFormat: ""},
+  y: {tickSpacing: 50},
+  color: {legend: true},
+  marks: [
+  Plot.barY(fe_search_by_state.flat(), {x: 'date', y: 'count', fill: 'state', sort: 'state'}),
+  ]
+})
+```
+
+### California Only
+The plot below visualizes the number of fatal encounters per year for **California only**. 
+
+**Note**: the "race" column is derived from Fatal Encounter's "Race with imputations" column
+```{ojs}
+ca_only_tidy = ca_only.map(p => ({name: p.Name, date: new Date(p[' Date of injury resulting in death (month/day/year)']).getFullYear(), count: 1, race: p['Race with imputations'], lea: p['Agency or agencies involved']}))
+```
+
+```{ojs}
+viewof fe_ca_search = Inputs.search(ca_only_tidy, 
+{placeholder: "Enter a name, year, race, or police department name", 
+width: 900,
+label: "Search Fatal Encounter Dataset (CA only)"
+})
+```
+
+```{ojs}
+viewof fe_rows_ca = Inputs.table(fe_ca_search, 
+{
+  columns: [
+    'name',
+    'date',
+    'race',
+    'lea',
+  ],
+  format: {
+    date : x => x.toFixed(0),
+    // 'Location of death (zip code)': x => x.toFixed(0),
+    // 'Supporting document link': x => htl.html`<a href=${x} target=_blank>${x}</a>`,
+    // 'URL of image (PLS NO HOTLINKS)': x => htl.html`<a href=${x} target=_blank>${x}</a>`
+  },
+  header: {
+    name: 'Name',
+    date: 'Date of death',
+    race: 'Race with imputations',
+    lea: 'Law Enforcement Agency/Agencies involved'
+  }
+} 
+)
+```
+
+
+```{ojs}
+Plot.plot({
+  width: 1000,
+  height: 600,
+  x: {tickFormat: ""},
+  y: {tickSpacing: 50},
+  color: {legend: true},
+  marks: [
+  Plot.barY(fe_ca_search, {x: 'date', y: 'count', fill: 'race', sort: 'race'}),
   ]
 })
 ```
