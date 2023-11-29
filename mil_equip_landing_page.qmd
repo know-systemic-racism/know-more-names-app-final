@@ -70,7 +70,7 @@ viewof mil_equip_rows = Inputs.table(mil_equip_search, {
     'name',
   ],
   format: {
-    'name': x => htl.html`<button type="button" class="leas btn btn-sm btn-outline-secondary">${x}</button>`,
+    'name': x => htl.html`<button type="button" style="border-radius: 12px;" class="options">${x}</button>`,
   },
   width: { 
     name: 900,

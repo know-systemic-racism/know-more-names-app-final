@@ -119,6 +119,10 @@ fig_scatter = px.scatter_mapbox(df,
                   zoom=10,
                   mapbox_style="carto-positron")
 
+scatter_trace = fig_scatter.data[0]
+scatter_trace.marker.color = "#FF6D2C"  # change dot color
+scatter_trace.marker.size = 6  # change dot size
+
 with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
     counties = json.load(response)
     # ** the file below is hosted locally but I could alternatively write code that removes all the non-CA fip codes from the DF 
@@ -138,8 +142,9 @@ fig_ca_counties = px.choropleth_mapbox(df_counties_ca,
 
 fig_ca_counties.update_geos(fitbounds="locations", visible=False)
 fig_ca_counties.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+fig_ca_counties.update_traces(hoverinfo="none")
 fig_ca_counties.add_trace(
-    fig_scatter.data[0]
+    scatter_trace
 )
 
 # customize hover label appearance
@@ -166,7 +171,7 @@ viewof fe_rows = Inputs.table(lea_search, {
     'lea_name',
   ],
   format: {
-    'lea_name': x => htl.html`<button type="button" class="leas">${x}</button>`,
+    'lea_name': x => htl.html`<button type="button" style="border-radius: 12px;" class="options">${x}</button>`,
   },
   align: {
     lea_name: "center",
@@ -184,7 +189,7 @@ viewof fe_rows = Inputs.table(lea_search, {
 <script>
     // 1) Event listener for buttons
     // select element 
-    let lea_buttons = document.querySelectorAll('.leas');
+    let lea_buttons = document.querySelectorAll('.options');
     const outputCells = document.querySelectorAll('.cell');
     const tableCell = outputCells[2];
 

@@ -124,6 +124,17 @@ fig_scatter = px.scatter_mapbox(df,
                   size_max=15, 
                   zoom=10,
                   mapbox_style="carto-positron")
+
+scatter_trace = fig_scatter.data[0]
+scatter_trace.marker.color = "#FF6D2C"  # change dot color
+scatter_trace.marker.size = 6  # change dot size
+# scatter_trace.marker.border.color = "black"
+# scatter_trace.update_traces(marker=dict(size=12,
+#                               line=dict(width=1,
+#                                         color='DarkSlateGrey')),
+#                   selector=dict(mode='markers')) 
+
+
 with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
     counties = json.load(response)
     # ** the file below is hosted locally but I could alternatively write code that removes all the non-CA fip codes from the DF 
@@ -141,9 +152,9 @@ fig_ca_counties = px.choropleth_mapbox(df_counties_ca,
                           )
 fig_ca_counties.update_geos(fitbounds="locations", visible=False)
 fig_ca_counties.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-# fig_ca_counties.update_layout(hovermode='None')
+
 fig_ca_counties.add_trace(
-    fig_scatter.data[0]
+    scatter_trace
 )
 # customize hover label appearance
 fig_ca_counties.update_layout(
@@ -153,8 +164,9 @@ fig_ca_counties.update_layout(
         font_family="Rockwell"
     )
 )
+
 # fig_scatter.show()
-# fig_ca_counties.show()
+fig_ca_counties.show()
 ```
 ```{ojs}
 viewof fe_search = Inputs.search(fe_data, 
@@ -167,7 +179,7 @@ viewof fe_rows = Inputs.table(fe_search, {
     'full_name',
   ],
   format: {
-    'full_name': x => htl.html`<button type="button" class="leas btn btn-sm btn-outline-secondary">${x}</button>`,
+    'full_name': x => htl.html`<button type="button" style="border-radius: 12px;" class="options">${x}</button>`,
   },
   align: {
     full_name: "center",

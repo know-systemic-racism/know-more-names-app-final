@@ -196,7 +196,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="st">'name'</span><span class="op">,</span></span>
 <span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
 <span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> {</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    <span class="st">'name'</span><span class="op">:</span> x <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">html</span><span class="vs">`&lt;button type="button" class="leas btn btn-sm btn-outline-secondary"&gt;</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">&lt;/button&gt;`</span><span class="op">,</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    <span class="st">'name'</span><span class="op">:</span> x <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">html</span><span class="vs">`&lt;button type="button" style="border-radius: 12px;" class="options"&gt;</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">&lt;/button&gt;`</span><span class="op">,</span></span>
 <span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
 <span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> { </span>
 <span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    <span class="dt">name</span><span class="op">:</span> <span class="dv">900</span><span class="op">,</span></span>
@@ -223,7 +223,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </main> <!-- /main -->
 
 <script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof mil_equip_search = Inputs.search(data, \n{placeholder: \"Enter a Military Equipment Name\", \nwidth: 1500,\nlabel: \"Search Military Equipment\"\n})\n\nviewof mil_equip_rows = Inputs.table(mil_equip_search, {\n  columns: [\n    'name',\n  ],\n  format: {\n    'name': x => htl.html`<button type=\"button\" class=\"leas btn btn-sm btn-outline-secondary\">${x}</button>`,\n  },\n  width: { \n    name: 900,\n  },\n})\n"},{"methodName":"interpretQuiet","source":"shinyInput('mil_equip_search')"},{"methodName":"interpretQuiet","source":"shinyInput('mil_equip_rows')"}]}
+{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof mil_equip_search = Inputs.search(data, \n{placeholder: \"Enter a Military Equipment Name\", \nwidth: 1500,\nlabel: \"Search Military Equipment\"\n})\n\nviewof mil_equip_rows = Inputs.table(mil_equip_search, {\n  columns: [\n    'name',\n  ],\n  format: {\n    'name': x => htl.html`<button type=\"button\" style=\"border-radius: 12px;\" class=\"options\">${x}</button>`,\n  },\n  width: { \n    name: 900,\n  },\n})\n"},{"methodName":"interpretQuiet","source":"shinyInput('mil_equip_search')"},{"methodName":"interpretQuiet","source":"shinyInput('mil_equip_rows')"}]}
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }

@@ -1,11 +1,14 @@
 ---
-title: "Do you know about???"
+title: ""
 execute: 
     echo: false
 # listing:
 #   template: home_pg.ejs
 #   contents: results
 ---
+```{=html}
+<h1 style="text-align: center">Do you know about</h1>
+```
 
 ```{python}
 # !pip install SPARQLWrapper
@@ -53,7 +56,7 @@ for i in range(10):
   rand_ints.append(randint(0, len(results)))
 for ri in rand_ints:
   html_content = """
-    <button style="border: 1px solid #ddd; padding: 10px; margin: 10px;">{}</button>
+    <button style="border: 1px solid #ddd; border-radius: 12px;padding: 10px; margin: 10px;font-weight:500">{}</button>
     """.format(results[ri])
   display(HTML(html_content))
 ```
