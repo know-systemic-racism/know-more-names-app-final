@@ -2,7 +2,7 @@
 title: "Military Equipment"
 execute:
     echo: false
-css: "/assets/dist/css/bootstrap.min.css"
+# css: "/assets/dist/css/bootstrap.min.css"
 ---
 
 ```{python}

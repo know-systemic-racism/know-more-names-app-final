@@ -2,7 +2,7 @@
 title: "Law Enforcement Agencies"
 execute: 
     echo: false
-css: "/assets/dist/css/bootstrap.min.css"
+# css: "/assets/dist/css/bootstrap.min.css"
 ---
 
 ```{python}
@@ -75,14 +75,14 @@ ojs_define(lea_data = lea_data)
 
 # html_content = """"""
 # if show_element:
-for entry in lea_data:
-    html_content = """
-    <div style="border: 1px solid #ddd; padding: 10px; margin: 10px;">
-        <h2>{}</h2>
-        <p><a href="{}">Official Website</a></p>
-    </div>
-    """.format(entry['lea_name'], entry['officialWebsite'])
-    display(HTML(html_content))
+# for entry in lea_data:
+#     html_content = """
+#     <div style="border: 1px solid #ddd; padding: 10px; margin: 10px;">
+#         <h2>{}</h2>
+#         <p><a href="{}">Official Website</a></p>
+#     </div>
+#     """.format(entry['lea_name'], entry['officialWebsite'])
+#     display(HTML(html_content))
 ```
 
 ```{python}
