@@ -12,19 +12,22 @@ import pandas as pd
 import plotly.express as px
 from urllib.request import urlopen
 import json
+from IPython.display import HTML
 ```
 ```{python}
 # Pull people Wikidata entries 
 
 endpoint_url = "https://query.wikidata.org/sparql"
-query = """SELECT ?person ?personLabel ?placeOfDeathLabel ?killedBy
-      WHERE
-      {
-        ?person wdt:P5008 wd:Q120754096.
-        ?person wdt:P20 ?placeOfDeath.
-     
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-      }"""
+query = """SELECT ?person ?personLabel ?placeOfDeathLabel ?sexOrGenderLabel ?ethnicGroupLabel ?dateOfDeathLabel
+          WHERE {
+            ?person wdt:P5008 wd:Q120754096.
+            ?person wdt:P20 ?placeOfDeath.
+            ?person wdt:P21 ?sexOrGender.
+            ?person wdt:P172 ?ethnicGroup.
+            ?person wdt:P570 ?dateOfDeath.
+
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+          }"""
 
 def get_results(endpoint_url, query):
     user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
@@ -36,9 +39,9 @@ def get_results(endpoint_url, query):
 ```
 ```{python}
 # Process API results
-results = get_results(endpoint_url, query)
+person_results = get_results(endpoint_url, query)["results"]["bindings"]
 fe_arr = []
-for result in results["results"]["bindings"]:
+for result in person_results:
   fe_arr.append({'full_name': result["personLabel"]["value"]})
 ojs_define(fe_data = fe_arr)
 ```
@@ -65,7 +68,17 @@ def get_results(endpoint_url, query):
     sparql.setReturnFormat(JSON)
     return sparql.query().convert()
 
-results = get_results(endpoint_url, query)["results"]["bindings"]
+event_results = get_results(endpoint_url, query)["results"]["bindings"]
+```
+```{python, echo=FALSE}
+for entry in person_results:
+    html_content = """
+    <div style="border: 1px solid #ddd; border-radius: 12px; padding: 10px; margin: 10px;">
+        <h2>{}</h2>
+        <p>{} ({} {}) was killed on {} in {}. To learn more, see this <a>article</a></p>
+    </div>
+    """.format(entry['personLabel']['value'], entry['personLabel']['value'], entry['ethnicGroupLabel']['value'][:-1], entry['sexOrGenderLabel']['value'], entry['dateOfDeathLabel']['value'], entry['placeOfDeathLabel']['value'])
+    display(HTML(html_content)) 
 ```
 ```{python}
 # !pip install pandas geopandas
@@ -73,7 +86,7 @@ results = get_results(endpoint_url, query)["results"]["bindings"]
 # import geopandas as gpd
 # from shapely.geometry import Point
 # Create a DataFrame 
-df = pd.DataFrame(results)
+df = pd.DataFrame(event_results)
 lat = []
 long = []
 coords = df['coordinates'].tolist()
@@ -155,6 +168,9 @@ viewof fe_rows = Inputs.table(fe_search, {
   ],
   format: {
     'full_name': x => htl.html`<button type="button" class="leas btn btn-sm btn-outline-secondary">${x}</button>`,
+  },
+  align: {
+    full_name: "center",
   },
   width: {
     full_name: 900,

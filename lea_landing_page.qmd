@@ -55,7 +55,7 @@ for result in results:
 ojs_define(lea_data = lea_data)
 ``` 
 
-```{python, echo=FALSE}
+```{python}
 # !pip install IPython.display
 
 # # Define the onclick event function
@@ -77,12 +77,14 @@ ojs_define(lea_data = lea_data)
 # if show_element:
 for entry in lea_data:
     html_content = """
-    <div style="border: 1px solid #ddd; padding: 10px; margin: 10px;">
+    <div style="border: 1px solid #ddd; border-radius: 12px; padding: 10px; margin: 10px;">
         <h2>{}</h2>
         <p><a href="{}">Official Website</a></p>
+        <p><a href="">Policy Manual</a></p>
+        <p><a href="">Military Equipment Inventory</a></p>
     </div>
     """.format(entry['lea_name'], entry['officialWebsite'])
-    display(HTML(html_content))
+    display(HTML(html_content)) 
 ```
 
 ```{python}
@@ -166,12 +168,12 @@ viewof fe_rows = Inputs.table(lea_search, {
   format: {
     'lea_name': x => htl.html`<button type="button" class="leas">${x}</button>`,
   },
+  align: {
+    lea_name: "center",
+  },
   width: {
     lea_name: 900,
   },
-//   height: { 
-
-//   }
 })
 ```
 

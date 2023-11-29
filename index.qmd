@@ -42,8 +42,9 @@ for i in range(len(results)):
   results[i] = results[i]["itemLabel"]["value"]
 ```
 
-<!-- ```{=html}
-<h2 id="myCodeCell" style="text-align: center"> -->
+```{=html}
+<h2 id="myCodeCell" style="text-align: center">
+```
 ```{python}
 from random import randint
 # select 10 random wikidata entries
@@ -56,8 +57,9 @@ for ri in rand_ints:
     """.format(results[ri])
   display(HTML(html_content))
 ```
-<!-- </h2> -->
+
 ```{=html}
+</h2>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     // Get the code cell content
