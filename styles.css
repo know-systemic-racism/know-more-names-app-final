@@ -1,12 +1,15 @@
 /* css styles */
 body {
     background-color: #414141;
-    color: #E9E9E9;
 }
 
 .navbar {
     background-color: #414141;
     
+}
+
+.aa-DetachedSearchButtonIcon {
+    color: #E9E9E9;
 }
 
 .navbar-title {
@@ -21,10 +24,38 @@ body {
     color: #E9E9E9;
 }
 
-.oi-ec050e-table tr:not(:last-child) td, .oi-ec050e-table tr:not(:last-child) th {
+.entries-wrap {
+    background-color: #eee;
+    border-radius: 12px;
+    margin-top: 1.5em;
+    padding: 1.2em;
+}
+
+.nav-fixed.quarto-light {
+    color:black;
+}
+
+h1, output {
+    color: #E9E9E9;
+}
+
+input {
+    color: black;
+}
+
+.oi-ec050e-table tr:not(:last-child) td {
     border-bottom: none;
 }
 
-.options button {
+.options.btn.btn-quarto {
+    color: black;
     background-color: #EDD869;
+}
+
+th {
+    display: none;
+}
+
+.info-card {
+    background-color: #FFFFFF;
 }
