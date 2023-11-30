@@ -4,6 +4,10 @@ execute:
     echo: false
 ---
 
+```{=html}
+<button onclick="goBack()">Go Back</button>
+```
+
 ```{python}
 import pandas as pd
 from IPython.display import HTML
@@ -26,12 +30,17 @@ terms_df = pd.read_csv(url)
 #     results.append({'term': str(terms[i]), 'def': df['Definition'][i], 'def_source'})
 ojs_define(data = terms_df)
 ```
-
+```{=html}
+<div class="search-bar">
+```
 ```{ojs}
 viewof policy_trm_search = Inputs.search(transpose(data), 
 {placeholder: "Enter a policy term (for example, reasonable)", 
 width: 1500,
 })
+```
+```{=html}
+</div>
 ```
 ```{=html}
 <div class="entries-wrap">
@@ -73,11 +82,13 @@ for index, row in terms_df.iterrows():
     const outputCells = document.querySelectorAll('.cell');
     const tableCell = outputCells[2];
     const entriesWrap = document.querySelector('.entries-wrap');
+    const searchBar = document.querySelector('.search-bar');
 
     function showInfoCard(btn) {
         // hide table
         tableCell.style.display = 'none';
         entriesWrap.style.display = 'none';
+        searchBar.style.display = 'none';
         // show content for only the element clicked
         // console.log(this)
         let iD = btn.id;
@@ -92,6 +103,19 @@ for index, row in terms_df.iterrows():
     }
 
     // 2) Event listener for back arrow button
+    
+    // Function to go back in the browser's history
+    function goBack() {
+      // window.history.back();
+        // hide table
+        tableCell.style.display = 'block';
+        entriesWrap.style.display = 'block';
+        searchBar.style.display = 'block';
+        let infoCard = document.querySelector(".info-card");
+        infoCard.style.display = 'none';
+    }
+
+    
 </script>
 ```
 
