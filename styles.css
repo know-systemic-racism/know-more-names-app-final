@@ -39,10 +39,6 @@ h1, output {
     color: #E9E9E9;
 }
 
-input {
-    color: black;
-}
-
 .oi-ec050e-table tr:not(:last-child) td {
     border-bottom: none;
 }
@@ -56,6 +52,21 @@ th {
     display: none;
 }
 
+input[type='checkbox'] { 
+    display: none;
+}
+
+input[type='search'] { 
+    border-radius: 20px;
+    padding: 0.5em;
+    border: none;
+}
+
 .info-card {
     background-color: #FFFFFF;
+    display: none;
+}
+
+h2 {
+    text-align: center;
 }

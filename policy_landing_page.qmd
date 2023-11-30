@@ -6,6 +6,7 @@ execute:
 
 ```{python}
 import pandas as pd
+from IPython.display import HTML
 ```
 
 ```{python}
@@ -19,15 +20,15 @@ terms_df = pd.read_csv(url)
 ```
 
 ```{python}
-results = []
-terms = terms_df['Term'].tolist()
-for term in terms:
-    results.append({'term': str(term)})
-ojs_define(data = results)
+# results = []
+# terms = terms_df['Term'].tolist()
+# for i in range(len(terms)):
+#     results.append({'term': str(terms[i]), 'def': df['Definition'][i], 'def_source'})
+ojs_define(data = terms_df)
 ```
 
 ```{ojs}
-viewof policy_trm_search = Inputs.search(data, 
+viewof policy_trm_search = Inputs.search(transpose(data), 
 {placeholder: "Enter a policy term (for example, reasonable)", 
 width: 1500,
 })
@@ -36,13 +37,12 @@ width: 1500,
 <div class="entries-wrap">
 ```
 ```{ojs}
-
 viewof pol_terms_rows = Inputs.table(policy_trm_search, {
   columns: [
-    'term',
+    'Term',
   ],
   format: {
-    'term': x => htl.html`<button type="button" style="border-radius: 20px;" class="options">${x}</button>`,
+    'Term': x => htl.html`<button type="button" id="${x}" style="border-radius: 20px;" onclick="showInfoCard(${x})"" class="options">${x}</button>`,
   },
   width: { 
     term: 900,
@@ -52,4 +52,54 @@ viewof pol_terms_rows = Inputs.table(policy_trm_search, {
 ```{=html}
 </div>
 ```
+```{python, echo=FALSE}
+for index, row in terms_df.iterrows():
+    html_content = """
+    <div id="{}" class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
+        <h2>{}</h2>
+        <h3>Definition</h3>
+        <p>{}</p>
+        <h3>Term in policy context</h3>
+        <p>{}</p>
+        <h3>History</h3>
+        <p>--coming soon--</p>
+    </div>
+    """.format(row['Term'], row['Term'], row['Definition'], row['Term in context'])
+    display(HTML(html_content)) 
+```
 
+```{=html}
+<script>
+    const outputCells = document.querySelectorAll('.cell');
+    const tableCell = outputCells[2];
+    const entriesWrap = document.querySelector('.entries-wrap');
+
+    function showInfoCard(btn) {
+        // hide table
+        tableCell.style.display = 'none';
+        entriesWrap.style.display = 'none';
+        // show content for only the element clicked
+        // console.log(this)
+        let iD = btn.id;
+        console.log(iD)
+        let infoCard = document.querySelector(`div#${iD}`);
+        console.log(infoCard)
+        infoCard.style.display = 'block';
+        // highlight correct LEA spot on plotly map 
+
+        // show back arrow button that will show the map as before and the table of all LEAs
+
+    }
+
+    // 2) Event listener for back arrow button
+</script>
+```
+
+<!-- ```{ojs}
+ejs = require('ejs');
+users = ['geddy', 'neil', 'alex'];
+
+// Just one template
+ejs.render('<script>alert("helloo);</script>');
+// => '<p>geddy | neil | alex</p>'
+``` -->
