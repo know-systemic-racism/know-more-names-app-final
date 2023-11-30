@@ -47,45 +47,8 @@ df = pd.DataFrame(results)
 lea_data = []
 for result in results:
     lea_data.append({'lea_name': result["itemLabel"]["value"], 'officialWebsite': result["officialWebsite"]["value"]})
-# def isolate_values(entry):
-#   return entry["value"]
-
-# df["itemLabel"] = df["itemLabel"].apply(isolate_values)
-# print(df["itemLabel"].tolist())
 ojs_define(lea_data = lea_data)
 ``` 
-
-```{python}
-# !pip install IPython.display
-
-# # Define the onclick event function
-# show_element = False
-# def on_button_click():
-#     show_element = True
-
-# # Generate HTML code with a button and the onclick event
-# button_html = f"""
-# <button id="myButton" onclick="{on_button_click()}">Click me</button>
-# """
-
-# # Display the HTML code
-# display(HTML(button_html))
-
-# Set a condition to determine whether to show the HTML element
-
-# html_content = """"""
-# if show_element:
-for entry in lea_data:
-    html_content = """
-    <div style="border: 1px solid #ddd; border-radius: 12px; padding: 10px; margin: 10px;">
-        <h2>{}</h2>
-        <p><a href="{}">Official Website</a></p>
-        <p><a href="">Policy Manual</a></p>
-        <p><a href="">Military Equipment Inventory</a></p>
-    </div>
-    """.format(entry['lea_name'], entry['officialWebsite'])
-    display(HTML(html_content)) 
-```
 
 ```{python}
 # Map LEA data
@@ -156,7 +119,7 @@ fig_ca_counties.update_layout(
     )
 )
 # fig_scatter.show()
-# fig_ca_counties.show()
+fig_ca_counties.show()
 ```
 
 ```{ojs}
@@ -165,13 +128,17 @@ viewof lea_search = Inputs.search(lea_data,
 width: 1500,
 label: "Search Law Enforcement Agencies"
 })
-
+```
+```{=html}
+<div class="entries-wrap">
+```
+```{ojs}
 viewof fe_rows = Inputs.table(lea_search, {
   columns: [
     'lea_name',
   ],
   format: {
-    'lea_name': x => htl.html`<button type="button" style="border-radius: 12px;" class="options">${x}</button>`,
+    'lea_name': x => htl.html`<button type="button" style="border-radius: 20px;" class="options">${x}</button>`,
   },
   align: {
     lea_name: "center",
@@ -180,6 +147,41 @@ viewof fe_rows = Inputs.table(lea_search, {
     lea_name: 900,
   },
 })
+```
+```{=html}
+</div>
+```
+
+```{python}
+# !pip install IPython.display
+
+# # Define the onclick event function
+# show_element = False
+# def on_button_click():
+#     show_element = True
+
+# # Generate HTML code with a button and the onclick event
+# button_html = f"""
+# <button id="myButton" onclick="{on_button_click()}">Click me</button>
+# """
+
+# # Display the HTML code
+# display(HTML(button_html))
+
+# Set a condition to determine whether to show the HTML element
+
+# html_content = """"""
+# if show_element:
+for entry in lea_data:
+    html_content = """
+    <div class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
+        <h2>{}</h2>
+        <p><a href="{}">Official Website</a></p>
+        <p><a href="">Policy Manual</a></p>
+        <p><a href="">Military Equipment Inventory</a></p>
+    </div>
+    """.format(entry['lea_name'], entry['officialWebsite'])
+    display(HTML(html_content)) 
 ```
 
 

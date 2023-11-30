@@ -70,16 +70,6 @@ def get_results(endpoint_url, query):
 
 event_results = get_results(endpoint_url, query)["results"]["bindings"]
 ```
-```{python, echo=FALSE}
-for entry in person_results:
-    html_content = """
-    <div style="border: 1px solid #ddd; border-radius: 12px; padding: 10px; margin: 10px;">
-        <h2>{}</h2>
-        <p>{} ({} {}) was killed on {} in {}. To learn more, see this <a>article</a></p>
-    </div>
-    """.format(entry['personLabel']['value'], entry['personLabel']['value'], entry['ethnicGroupLabel']['value'][:-1], entry['sexOrGenderLabel']['value'], entry['dateOfDeathLabel']['value'], entry['placeOfDeathLabel']['value'])
-    display(HTML(html_content)) 
-```
 ```{python}
 # !pip install pandas geopandas
 
@@ -172,14 +162,19 @@ fig_ca_counties.show()
 viewof fe_search = Inputs.search(fe_data, 
 {placeholder: "Enter a name", 
 width: 1500,
-label: "Search Fatal Encounter Victims"
 })
+
+```
+```{=html}
+<div class="entries-wrap">
+```
+```{ojs}
 viewof fe_rows = Inputs.table(fe_search, {
   columns: [
     'full_name',
   ],
   format: {
-    'full_name': x => htl.html`<button type="button" style="border-radius: 12px;" class="options">${x}</button>`,
+    'full_name': x => htl.html`<button type="button" style="border-radius: 20px;" class="options">${x}</button>`,
   },
   align: {
     full_name: "center",
@@ -188,5 +183,18 @@ viewof fe_rows = Inputs.table(fe_search, {
     full_name: 900,
   },
 })
+```
+```{=html}
+</div>
+```
+```{python, echo=FALSE}
+for entry in person_results:
+    html_content = """
+    <div class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
+        <h2>{}</h2>
+        <p>{} ({} {}) was killed on {} in {}. To learn more, see this <a>article</a></p>
+    </div>
+    """.format(entry['personLabel']['value'], entry['personLabel']['value'], entry['ethnicGroupLabel']['value'][:-1], entry['sexOrGenderLabel']['value'], entry['dateOfDeathLabel']['value'], entry['placeOfDeathLabel']['value'])
+    display(HTML(html_content)) 
 ```
 

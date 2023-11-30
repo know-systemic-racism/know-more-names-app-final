@@ -184,33 +184,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="30" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 29;"><span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>viewof policy_trm_search <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">search</span>(data<span class="op">,</span> </span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>{<span class="dt">placeholder</span><span class="op">:</span> <span class="st">"Enter a Policy Term"</span><span class="op">,</span> </span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="dt">width</span><span class="op">:</span> <span class="dv">1500</span><span class="op">,</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="dt">label</span><span class="op">:</span> <span class="st">"Search Policy Terms"</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>viewof pol_terms_rows <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(policy_trm_search<span class="op">,</span> {</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="dt">columns</span><span class="op">:</span> [</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">'term'</span><span class="op">,</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> {</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">'term'</span><span class="op">:</span> x <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">html</span><span class="vs">`&lt;button type="button" style="border-radius: 12px;" class="options"&gt;</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">&lt;/button&gt;`</span><span class="op">,</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> { </span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="dt">term</span><span class="op">:</span> <span class="dv">900</span><span class="op">,</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="29" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 28;"><span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>viewof policy_trm_search <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">search</span>(data<span class="op">,</span> </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>{<span class="dt">placeholder</span><span class="op">:</span> <span class="st">"Enter a policy term (for example, reasonable)"</span><span class="op">,</span> </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="dt">width</span><span class="op">:</span> <span class="dv">1500</span><span class="op">,</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-1" data-nodetype="declaration">
+<div id="ojs-cell-1" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
+<div class="entries-wrap">
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="38" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 37;"><span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>viewof pol_terms_rows <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(policy_trm_search<span class="op">,</span> {</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="dt">columns</span><span class="op">:</span> [</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">'term'</span><span class="op">,</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> {</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">'term'</span><span class="op">:</span> x <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">html</span><span class="vs">`&lt;button type="button" style="border-radius: 20px;" class="options"&gt;</span><span class="sc">${</span>x<span class="sc">}</span><span class="vs">&lt;/button&gt;`</span><span class="op">,</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> { </span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="dt">term</span><span class="op">:</span> <span class="dv">900</span><span class="op">,</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-2" data-nodetype="declaration">
+<div id="ojs-cell-2" data-nodetype="declaration">
 
 </div>
 </div>
@@ -222,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </main> <!-- /main -->
 
 <script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof policy_trm_search = Inputs.search(data, \n{placeholder: \"Enter a Policy Term\", \nwidth: 1500,\nlabel: \"Search Policy Terms\"\n})\n\nviewof pol_terms_rows = Inputs.table(policy_trm_search, {\n  columns: [\n    'term',\n  ],\n  format: {\n    'term': x => htl.html`<button type=\"button\" style=\"border-radius: 12px;\" class=\"options\">${x}</button>`,\n  },\n  width: { \n    term: 900,\n  },\n})\n"},{"methodName":"interpretQuiet","source":"shinyInput('policy_trm_search')"},{"methodName":"interpretQuiet","source":"shinyInput('pol_terms_rows')"}]}
+{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof policy_trm_search = Inputs.search(data, \n{placeholder: \"Enter a policy term (for example, reasonable)\", \nwidth: 1500,\n})\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"\nviewof pol_terms_rows = Inputs.table(policy_trm_search, {\n  columns: [\n    'term',\n  ],\n  format: {\n    'term': x => htl.html`<button type=\"button\" style=\"border-radius: 20px;\" class=\"options\">${x}</button>`,\n  },\n  width: { \n    term: 900,\n  },\n})\n"},{"methodName":"interpretQuiet","source":"shinyInput('policy_trm_search')"},{"methodName":"interpretQuiet","source":"shinyInput('pol_terms_rows')"}]}
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }

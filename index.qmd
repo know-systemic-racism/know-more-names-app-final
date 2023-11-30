@@ -55,9 +55,12 @@ rand_ints = []
 for i in range(10):
   rand_ints.append(randint(0, len(results)))
 for ri in rand_ints:
+  wk_entry = results[ri]
+  if wk_entry[:5] == 'death':
+    wk_entry = 'the ' + wk_entry
   html_content = """
-    <button style="border: 1px solid #ddd; border-radius: 12px;padding: 10px; margin: 10px;font-weight:500">{}</button>
-    """.format(results[ri])
+    <button style="border: 1px solid #ddd; border-radius: 20px;padding: 10px; margin: 10px;font-weight:500">{}</button>
+    """.format(wk_entry)
   display(HTML(html_content))
 ```
 
