@@ -1,11 +1,8 @@
+name: Scheduled Quarto Publish
+
 on:
-  workflow_dispatch:
   schedule:
     - cron: '*/3 * * * *'
-  push:
-    branches: main
-
-name: Scheduled Quarto Publish
 
 jobs:
   build-deploy:
