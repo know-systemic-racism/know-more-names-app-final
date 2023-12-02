@@ -13,7 +13,12 @@ This web application leverages the following datasets: Wikidata knowledge graph 
 5. Key legal terms in policies and extracted (words in context) from LEA policy documents*
 6. Military equipment inventories* 
 
-A scheduled GitHub Actions workflow runs every month to dynamically update the information on this website if there have been any changes to the data sources. The data in the information cards for the Fatal Encounters and Law Enforcement Agency sections is pulled directly from Wikidata using their API. For now, the data for the other sections on the website has not yet been entered into Wikidata, so they are being pulled from Google Sheets using Python's Pandas library. 
+## How it works
+### Updating data to reflect Wikidata/other data source's changes
+A scheduled GitHub Actions workflow runs every month to dynamically update the information on this website if there have been any changes to the data sources. 
+
+### Data flow
+The data in the information cards for the Fatal Encounters and Law Enforcement Agency sections is pulled directly from Wikidata using their API. For now, the data for the other sections on the website have not yet been entered into Wikidata, so they are being pulled from Google Sheets using Python's Pandas library. 
 
 ## Steps to update webpage:
 1. On the main branch, go to the source file of the page(s) you want to edit (i.e. if you want to edit the home page, you would go to the index.qmd file)
