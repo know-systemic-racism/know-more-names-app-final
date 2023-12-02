@@ -5,6 +5,10 @@ execute:
 # css: "/assets/dist/css/bootstrap.min.css"
 ---
 
+```{=html}
+<button id="goback-btn" onclick="goBack()">Back to search</button>
+```
+
 ```{python}
 import sys
 from SPARQLWrapper import SPARQLWrapper, JSON
@@ -44,9 +48,21 @@ def get_results(endpoint_url, query):
 # API results
 results = get_results(endpoint_url, query)["results"]["bindings"]
 df = pd.DataFrame(results)
+
+# def isolateQID(x):
+#     last_slash = x["value"].rindex('/')
+#     x = x["value"][last_slash + 1:]
+
+
+# df['item'] = df['item'].apply(isolateQID) 
+# print(df['item'])
 lea_data = []
 for result in results:
-    lea_data.append({'lea_name': result["itemLabel"]["value"], 'officialWebsite': result["officialWebsite"]["value"]})
+    last_slash = result["item"]["value"].rindex('/')
+    qid = result["item"]["value"][last_slash + 1:]
+    name = result["itemLabel"]["value"]
+    name_and_qid = name + '_' + qid
+    lea_data.append({'lea_name': name, 'officialWebsite': result["officialWebsite"]["value"], 'name_plus_id': name_and_qid, 'qid': qid})
 ojs_define(lea_data = lea_data)
 ``` 
 
@@ -121,13 +137,17 @@ fig_ca_counties.update_layout(
 # fig_scatter.show()
 fig_ca_counties.show()
 ```
-
+```{=html}
+<div class="search-bar">
+```
 ```{ojs}
 viewof lea_search = Inputs.search(lea_data, 
 {placeholder: "Enter a LEA name", 
 width: 1500,
-label: "Search Law Enforcement Agencies"
 })
+```
+```{=html}
+</div>
 ```
 ```{=html}
 <div class="entries-wrap">
@@ -135,10 +155,18 @@ label: "Search Law Enforcement Agencies"
 ```{ojs}
 viewof fe_rows = Inputs.table(lea_search, {
   columns: [
-    'lea_name',
+    'name_plus_id',
   ],
   format: {
-    'lea_name': x => htl.html`<button type="button" style="border-radius: 20px;" class="options">${x}</button>`,
+    'name_plus_id': x => {
+          // delimiter -
+          let indexDelim = x.indexOf('_');
+          // everything before is name
+          let name = x.substring(0, indexDelim);
+          // everything after is ID 
+          let iD = x.substring(indexDelim + 1);
+          return htl.html`<button type="button" id="${iD}" style="border-radius: 20px;" onclick="showInfoCard(${iD})"" class="options">${name}</button>`
+          },
   },
   align: {
     lea_name: "center",
@@ -174,42 +202,67 @@ viewof fe_rows = Inputs.table(lea_search, {
 # if show_element:
 for entry in lea_data:
     html_content = """
-    <div class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
+    <div id="{}" class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
         <h2>{}</h2>
         <p><a href="{}">Official Website</a></p>
         <p><a href="">Policy Manual</a></p>
         <p><a href="">Military Equipment Inventory</a></p>
     </div>
-    """.format(entry['lea_name'], entry['officialWebsite'])
+    """.format(entry['qid'], entry['lea_name'], entry['officialWebsite'])
     display(HTML(html_content)) 
 ```
 
 
 
 ```{=html}
-<!-- add event listeners to buttons -->
 <script>
-    // 1) Event listener for buttons
-    // select element 
-    let lea_buttons = document.querySelectorAll('.options');
     const outputCells = document.querySelectorAll('.cell');
     const tableCell = outputCells[2];
+    const entriesWrap = document.querySelector('.entries-wrap');
+    const searchBar = document.querySelector('.search-bar');
 
-    lea_buttons.forEach((btn) => {
-        btn.addEventListener("click", myFunction);
-    });
-
-    function myFunction() {
+    function showInfoCard(btn) {
         // hide table
         tableCell.style.display = 'none';
+        entriesWrap.style.display = 'none';
+        searchBar.style.display = 'none';
         // show content for only the element clicked
-
-        // highlight correct LEA spot on plotly map 
+        // debugger;
+        let iD = btn.id;
+        let infoCard = document.querySelector(`div#${iD}`);
+        console.log(infoCard)
+        infoCard.style.display = 'block';
+        // highlight correct LEA spot on plotly map --** to come **--
 
         // show back arrow button that will show the map as before and the table of all LEAs
-
+        let goBackBtn = document.querySelector('#goback-btn');
+        goBackBtn.style.display = 'block';
     }
 
     // 2) Event listener for back arrow button
+    
+    // Function to go back in the browser's history
+    function goBack() {
+      // window.history.back();
+        // hide table
+        tableCell.style.display = 'block';
+        entriesWrap.style.display = 'block';
+        searchBar.style.display = 'block';
+        // hide info card
+        // debugger;
+        let infoCard;
+        document.querySelectorAll('.info-card').forEach(element => {
+          if (window.getComputedStyle(element).display == 'block') {
+            infoCard = element;
+          }
+        });
+        infoCard.style.display = 'none';
+
+        // hide btn again
+        let goBackBtn = document.querySelector('#goback-btn');
+        goBackBtn.style.display = 'none';
+    }
+
+    
 </script>
 ```

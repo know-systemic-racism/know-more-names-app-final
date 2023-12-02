@@ -5,7 +5,7 @@ execute:
 ---
 
 ```{=html}
-<button onclick="goBack()">Go Back</button>
+<button id="goback-btn" onclick="goBack()">Back to search</button>
 ```
 
 ```{python}
@@ -28,6 +28,7 @@ terms_df = pd.read_csv(url)
 # terms = terms_df['Term'].tolist()
 # for i in range(len(terms)):
 #     results.append({'term': str(terms[i]), 'def': df['Definition'][i], 'def_source'})
+terms_df['term_plus_id'] = terms_df['Term'] + '_' + terms_df['id']
 ojs_define(data = terms_df)
 ```
 ```{=html}
@@ -46,15 +47,24 @@ width: 1500,
 <div class="entries-wrap">
 ```
 ```{ojs}
+// try to render by doing some loop (with htl.html)
 viewof pol_terms_rows = Inputs.table(policy_trm_search, {
   columns: [
-    'Term',
+    'term_plus_id',
   ],
   format: {
-    'Term': x => htl.html`<button type="button" id="${x}" style="border-radius: 20px;" onclick="showInfoCard(${x})"" class="options">${x}</button>`,
+    'term_plus_id': x => {
+          // delimiter -
+          let indexDelim = x.indexOf('_');
+          // everything before is name
+          let term = x.substring(0, indexDelim);
+          // everything after is ID 
+          let iD = x.substring(indexDelim + 1);
+          return htl.html`<button type="button" id="${iD}" style="border-radius: 20px;" onclick="showInfoCard(${iD})"" class="options">${term}</button>`
+          },
   },
   width: { 
-    term: 900,
+    term_plus_id: 900,
   },
 })
 ```
@@ -73,7 +83,7 @@ for index, row in terms_df.iterrows():
         <h3>History</h3>
         <p>--coming soon--</p>
     </div>
-    """.format(row['Term'], row['Term'], row['Definition'], row['Term in context'])
+    """.format(row['id'], row['Term'], row['Definition'], row['Term in context'])
     display(HTML(html_content)) 
 ```
 
@@ -90,16 +100,16 @@ for index, row in terms_df.iterrows():
         entriesWrap.style.display = 'none';
         searchBar.style.display = 'none';
         // show content for only the element clicked
-        // console.log(this)
+        // debugger;
         let iD = btn.id;
-        console.log(iD)
         let infoCard = document.querySelector(`div#${iD}`);
         console.log(infoCard)
         infoCard.style.display = 'block';
-        // highlight correct LEA spot on plotly map 
+        // highlight correct LEA spot on plotly map --** to come **--
 
         // show back arrow button that will show the map as before and the table of all LEAs
-
+        let goBackBtn = document.querySelector('#goback-btn');
+        goBackBtn.style.display = 'block';
     }
 
     // 2) Event listener for back arrow button
@@ -111,8 +121,19 @@ for index, row in terms_df.iterrows():
         tableCell.style.display = 'block';
         entriesWrap.style.display = 'block';
         searchBar.style.display = 'block';
-        let infoCard = document.querySelector(".info-card");
+        // hide info card
+        // debugger;
+        let infoCard;
+        document.querySelectorAll('.info-card').forEach(element => {
+          if (window.getComputedStyle(element).display == 'block') {
+            infoCard = element;
+          }
+        });
         infoCard.style.display = 'none';
+
+        // hide btn again
+        let goBackBtn = document.querySelector('#goback-btn');
+        goBackBtn.style.display = 'none';
     }
 
     

@@ -5,6 +5,10 @@ execute:
 # css: "/assets/dist/css/bootstrap.min.css"
 ---
 
+```{=html}
+<button id="goback-btn" onclick="goBack()">Back to search</button>
+```
+
 ```{python}
 import sys
 from SPARQLWrapper import SPARQLWrapper, JSON 
@@ -40,10 +44,22 @@ def get_results(endpoint_url, query):
 ```{python}
 # Process API results
 person_results = get_results(endpoint_url, query)["results"]["bindings"]
-fe_arr = []
+clean_fe_arr = []
 for result in person_results:
-  fe_arr.append({'full_name': result["personLabel"]["value"]})
-ojs_define(fe_data = fe_arr)
+  last_slash = result["person"]["value"].rindex('/')
+  qid = result["person"]["value"][last_slash + 1:]
+  name = result["personLabel"]["value"]
+  name_and_qid = name + '_' + qid
+  clean_fe_arr.append({
+                  'full_name': name, 
+                  'name_plus_id': name_and_qid, 
+                  'qid': qid, 
+                  'ethnicGroupLabel': result['ethnicGroupLabel']['value'][:-1], 
+                  'sexOrGenderLabel': result['sexOrGenderLabel']['value'],
+                  'dateOfDeathLabel': result['dateOfDeathLabel']['value'],
+                  'placeOfDeathLabel': result['placeOfDeathLabel']['value']
+                })
+ojs_define(fe_data = clean_fe_arr)
 ```
 ```{python}
 # Pull coordinates and titles of death events
@@ -71,10 +87,6 @@ def get_results(endpoint_url, query):
 event_results = get_results(endpoint_url, query)["results"]["bindings"]
 ```
 ```{python}
-# !pip install pandas geopandas
-
-# import geopandas as gpd
-# from shapely.geometry import Point
 # Create a DataFrame 
 df = pd.DataFrame(event_results)
 lat = []
@@ -89,7 +101,6 @@ for i in range(len(coords)):
   # names.append(labels[i]["value"][9:])
 df['Latitude'] = lat
 df['Longitude'] = long
-# df["personLabel"] = names
 # isolate victim name from Wikidata label
 def isolate_person_name(entry): 
   return entry["value"][9:]
@@ -99,17 +110,7 @@ df["personLabel"] = df["personLabel"].map(isolate_person_name)
 fig_scatter = px.scatter_mapbox(df, 
                   lat='Latitude',
                   lon='Longitude',
-#                   color="Policy_Manual_Exists", 
                   hover_name= df["personLabel"],
-                  # hover_data={ 
-                  #                 'Age': True, 
-                  #                 'Gender': True, 
-                  #                 'Race with imputations': True, 
-                  #                 ' Date of injury resulting in death (month/day/year)': True, 
-                  #                 'Agency or agencies involved': True,
-                  #                 'Latitude':False,
-                  #                 'Longitude': False
-                  #             },
                   color_continuous_scale=px.colors.cyclical.IceFire, 
                   size_max=15, 
                   zoom=10,
@@ -158,6 +159,9 @@ fig_ca_counties.update_layout(
 # fig_scatter.show()
 fig_ca_counties.show()
 ```
+```{=html}
+<div class="search-bar">
+```
 ```{ojs}
 viewof fe_search = Inputs.search(fe_data, 
 {placeholder: "Enter a name", 
@@ -166,21 +170,32 @@ width: 1500,
 
 ```
 ```{=html}
+</div>
+```
+```{=html}
 <div class="entries-wrap">
 ```
 ```{ojs}
 viewof fe_rows = Inputs.table(fe_search, {
   columns: [
-    'full_name',
+    'name_plus_id',
   ],
   format: {
-    'full_name': x => htl.html`<button type="button" style="border-radius: 20px;" class="options">${x}</button>`,
+    'name_plus_id': x => {
+          // delimiter -
+          let indexDelim = x.indexOf('_');
+          // everything before is name
+          let term = x.substring(0, indexDelim);
+          // everything after is ID 
+          let iD = x.substring(indexDelim + 1);
+          return htl.html`<button type="button" id="${iD}" style="border-radius: 20px;" onclick="showInfoCard(${iD})"" class="options">${term}</button>`
+          },
   },
   align: {
-    full_name: "center",
+    'name_plus_id': "center",
   },
   width: {
-    full_name: 900,
+    'name_plus_id': 900,
   },
 })
 ```
@@ -188,13 +203,66 @@ viewof fe_rows = Inputs.table(fe_search, {
 </div>
 ```
 ```{python, echo=FALSE}
-for entry in person_results:
+for entry in clean_fe_arr:
     html_content = """
-    <div class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
+    <div id="{}" class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
         <h2>{}</h2>
         <p>{} ({} {}) was killed on {} in {}. To learn more, see this <a>article</a></p>
     </div>
-    """.format(entry['personLabel']['value'], entry['personLabel']['value'], entry['ethnicGroupLabel']['value'][:-1], entry['sexOrGenderLabel']['value'], entry['dateOfDeathLabel']['value'], entry['placeOfDeathLabel']['value'])
+    """.format(entry['qid'], entry['full_name'], entry['full_name'], entry['ethnicGroupLabel'], entry['sexOrGenderLabel'], entry['dateOfDeathLabel'], entry['placeOfDeathLabel'])
     display(HTML(html_content)) 
 ```
 
+
+```{=html}
+<script>
+    const outputCells = document.querySelectorAll('.cell');
+    const tableCell = outputCells[2];
+    const entriesWrap = document.querySelector('.entries-wrap');
+    const searchBar = document.querySelector('.search-bar');
+
+    function showInfoCard(btn) {
+        // hide table
+        tableCell.style.display = 'none';
+        entriesWrap.style.display = 'none';
+        searchBar.style.display = 'none';
+        // show content for only the element clicked
+        // debugger;
+        let iD = btn.id;
+        let infoCard = document.querySelector(`div#${iD}`);
+        console.log(infoCard)
+        infoCard.style.display = 'block';
+        // highlight correct LEA spot on plotly map --** to come **--
+
+        // show back arrow button that will show the map as before and the table of all LEAs
+        let goBackBtn = document.querySelector('#goback-btn');
+        goBackBtn.style.display = 'block';
+    }
+
+    // 2) Event listener for back arrow button
+    
+    // Function to go back in the browser's history
+    function goBack() {
+      // window.history.back();
+        // hide table
+        tableCell.style.display = 'block';
+        entriesWrap.style.display = 'block';
+        searchBar.style.display = 'block';
+        // hide info card
+        // debugger;
+        let infoCard;
+        document.querySelectorAll('.info-card').forEach(element => {
+          if (window.getComputedStyle(element).display == 'block') {
+            infoCard = element;
+          }
+        });
+        infoCard.style.display = 'none';
+
+        // hide btn again
+        let goBackBtn = document.querySelector('#goback-btn');
+        goBackBtn.style.display = 'none';
+    }
+
+    
+</script>
+```

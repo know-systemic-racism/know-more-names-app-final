@@ -6,8 +6,10 @@ execute:
 #   template: home_pg.ejs
 #   contents: results
 ---
+
 ```{=html}
-<h1 style="text-align: center">Do you know about</h1>
+<body style="overflow: hidden;">
+<h1>Do you know about</h1>
 ```
 
 ```{python}
@@ -19,15 +21,21 @@ from IPython.display import HTML
 endpoint_url = "https://query.wikidata.org/sparql"
 
 query = """
-        SELECT DISTINCT ?item ?itemLabel WHERE {
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-            {
-                SELECT DISTINCT ?item ?itemLabel WHERE {
-                ?item p:P5008 ?statement0.
-                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
-                }
+        SELECT ?item ?itemLabel (GROUP_CONCAT(DISTINCT ?instanceOfLabel; SEPARATOR=", ") AS ?instanceOfLabels)
+        WHERE {
+          SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+          {
+            SELECT DISTINCT ?item ?itemLabel ?instanceOfLabel
+            WHERE {
+              ?item p:P5008 ?statement0.
+              ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
+              OPTIONAL { ?item wdt:P31 ?instanceOf.  # Optional: Retrieve instance of property
+                        ?instanceOf rdfs:label ?instanceOfLabel. FILTER(LANG(?instanceOfLabel) = "en") }
             }
-        }"""
+          }
+        } 
+        GROUP BY ?item ?itemLabel
+          """
 
 
 def get_results(endpoint_url, query):
@@ -42,39 +50,51 @@ def get_results(endpoint_url, query):
 results = get_results(endpoint_url, query)["results"]["bindings"]
 
 for i in range(len(results)):
-  results[i] = results[i]["itemLabel"]["value"]
+  results[i] = {"label": results[i]["itemLabel"]["value"], "instanceOf": results[i]["instanceOfLabels"]["value"]}
 ```
 
 ```{=html}
-<h2 id="myCodeCell" style="text-align: center">
+<div class="scrolling-names" style="text-align: center">
 ```
 ```{python}
-from random import randint
+# from random import randint
 # select 10 random wikidata entries
-rand_ints = []
-for i in range(10):
-  rand_ints.append(randint(0, len(results)))
-for ri in rand_ints:
-  wk_entry = results[ri]
-  if wk_entry[:5] == 'death':
-    wk_entry = 'the ' + wk_entry
-  html_content = """
-    <button style="border: 1px solid #ddd; border-radius: 20px;padding: 10px; margin: 10px;font-weight:500">{}</button>
-    """.format(wk_entry)
-  display(HTML(html_content))
+# rand_ints = []
+# for i in range(10):
+#   rand_ints.append(randint(0, len(results)))
+print(len(results))
+for i in range(len(results)):
+  wk_entry = results[i]
+  label = wk_entry["label"]
+  # add "the" to death event entries
+  if label[:5] == 'death':
+    label = 'The ' + label
+
+  # check "instance of" property and set href's according to this 
+  href = '#'
+  instance_of = wk_entry["instanceOf"]
+  try: 
+    comma_index = instance_of.index(',')
+  except:
+    comma_index = None
+
+  if instance_of == "human":
+    href = '/fe_landing_page.html'
+  if instance_of[:comma_index] == "law enforcement agency":
+    href = '/lea_landing_page.html'
+  if instance_of[:comma_index] == "homicide" or instance_of[:comma_index] == "medical emergency" or instance_of[:comma_index] == "death":
+    href = '/fe_landing_page.html'
+
+  # create and render HTML element
+  anchors = """
+    <a href="{}" type="button" class="home-pg-btns">{}</a>
+    """.format(href, label)
+  display(HTML(anchors))
 ```
 
-```{=html}
-</h2>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Get the code cell content
-    var codeCellContent = document.getElementById("myCodeCell").textContent;
-
-    // Execute the code using Quarto's execution API
-    quarto.execute(codeCellContent);
-  });
-</script>
+```{=html} 
+  </div>
+</body>
 ```
 
 
