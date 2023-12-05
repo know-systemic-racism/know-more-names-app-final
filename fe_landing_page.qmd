@@ -18,6 +18,7 @@ import plotly.express as px
 from urllib.request import urlopen
 import json
 from IPython.display import HTML
+from datetime import datetime
 ```
 ```{python}
 # Pull people Wikidata entries 
@@ -205,12 +206,14 @@ viewof fe_rows = Inputs.table(fe_search, {
 ```
 ```{python, echo=FALSE}
 for entry in clean_fe_arr:
+    datetime_date = datetime.strptime(entry['dateOfDeathLabel'], "%Y-%m-%dT%H:%M:%SZ")
+    date = datetime_date.strftime("%B %d, %Y")
     html_content = """
     <div id="{}" class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
         <h2>{}</h2>
-        <p>{} ({} {}) was killed on {} in {}. To learn more, see this <a>article</a></p>
+        <p>{} ({} {}) was killed on {} in {}. To learn more, see this <a>article</a>.</p>
     </div>
-    """.format(entry['qid'], entry['full_name'], entry['full_name'], entry['ethnicGroupLabel'], entry['sexOrGenderLabel'], entry['dateOfDeathLabel'], entry['placeOfDeathLabel'])
+    """.format(entry['qid'], entry['full_name'], entry['full_name'], entry['ethnicGroupLabel'], entry['sexOrGenderLabel'], date, entry['placeOfDeathLabel'])
     display(HTML(html_content)) 
 ```
 

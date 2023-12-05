@@ -22,7 +22,7 @@ body {
 
 .scrolling-names {
     position: absolute;
-    animation: scrollAnimation 1300s linear infinite;
+    animation: scrollAnimation 1400s linear infinite;
     display: flex;
     flex-direction: column-reverse; /* Adjusted to make names scroll downward */
     justify-content: space-between;
@@ -32,7 +32,7 @@ body {
 .home-pg-btns {
     text-align: center;
     display: block;
-    color: #E9E9E9;
+    color: #E9E9E9; 
     /* background-color: #EDD869; */
     /* border-radius: 20px; */
     padding: 10px; 
