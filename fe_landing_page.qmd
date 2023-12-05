@@ -2,6 +2,7 @@
 title: "Fatal Encounters in California"
 execute:
   echo: false
+sidebar: false
 # css: "/assets/dist/css/bootstrap.min.css"
 ---
 

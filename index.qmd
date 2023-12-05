@@ -2,6 +2,7 @@
 title: ""
 execute: 
     echo: false
+sidebar: false
 # listing:
 #   template: home_pg.ejs
 #   contents: results

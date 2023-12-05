@@ -2,6 +2,7 @@
 title: "Military Equipment"
 execute:
     echo: false
+sidebar: false
 # css: "/assets/dist/css/bootstrap.min.css"
 ---
 

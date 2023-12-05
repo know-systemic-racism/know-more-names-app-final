@@ -2,6 +2,7 @@
 title: "Policy Terms"
 execute:
     echo: false
+sidebar: false
 ---
 
 ```{=html}
