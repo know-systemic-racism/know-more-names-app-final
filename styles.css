@@ -37,8 +37,14 @@ body {
     /* border-radius: 20px; */
     padding: 10px; 
     margin: 10px;
-    font-weight:500;
+    font-weight:700;
+    font-size: x-large;
+
 }
+
+.home-pg-btns:hover {
+    color: #EDD869;
+} 
 
 @keyframes scrollAnimation {
     0% {
@@ -60,10 +66,8 @@ body {
     z-index: -1;
     transition: width 0.3s ease;
   }
-  
-.home-pg-btns:hover::before {
-    width: 100%;
-} */
+*/
+
 
 #quarto-search {
     color: #E9E9E9;
