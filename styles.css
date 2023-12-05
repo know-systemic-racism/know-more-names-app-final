@@ -86,6 +86,7 @@ body {
     background-color: #E9E9E9; /* Bootstrap primary color */
     color: black;
     transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    margin-bottom: 1.5em;
 }
 
  /* Hover effect */
@@ -119,10 +120,6 @@ h1, output {
     border-radius: 12px;
     margin-top: 1.5em;
     padding: 1.2em;
-}
-
-.oi-ec050e-table tr:not(:last-child) td {
-    border-bottom: none;
 }
 
 .options.btn.btn-quarto {
