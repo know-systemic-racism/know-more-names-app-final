@@ -187,10 +187,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="search-bar">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="37" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 36;"><span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>viewof policy_trm_search <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">search</span>(<span class="fu">transpose</span>(data)<span class="op">,</span> </span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>{<span class="dt">placeholder</span><span class="op">:</span> <span class="st">"Enter a policy term (for example, reasonable)"</span><span class="op">,</span> </span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="dt">width</span><span class="op">:</span> <span class="dv">1500</span><span class="op">,</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="38" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 37;"><span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>viewof policy_trm_search <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">search</span>(<span class="fu">transpose</span>(data)<span class="op">,</span> </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>{<span class="dt">placeholder</span><span class="op">:</span> <span class="st">"Enter a policy term (for example, reasonable)"</span><span class="op">,</span> </span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="dt">width</span><span class="op">:</span> <span class="dv">1500</span><span class="op">,</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-1" data-nodetype="declaration">
 
@@ -200,26 +200,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="entries-wrap">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="49" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 48;"><span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">// try to render by doing some loop (with htl.html)</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>viewof pol_terms_rows <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(policy_trm_search<span class="op">,</span> {</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>  <span class="dt">columns</span><span class="op">:</span> [</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    <span class="st">'term_plus_id'</span><span class="op">,</span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> {</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="st">'term_plus_id'</span><span class="op">:</span> x <span class="kw">=&gt;</span> {</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>          <span class="co">// delimiter -</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> indexDelim <span class="op">=</span> x<span class="op">.</span><span class="fu">indexOf</span>(<span class="st">'_'</span>)<span class="op">;</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>          <span class="co">// everything before is name</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> term <span class="op">=</span> x<span class="op">.</span><span class="fu">substring</span>(<span class="dv">0</span><span class="op">,</span> indexDelim)<span class="op">;</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>          <span class="co">// everything after is ID </span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> iD <span class="op">=</span> x<span class="op">.</span><span class="fu">substring</span>(indexDelim <span class="op">+</span> <span class="dv">1</span>)<span class="op">;</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>          <span class="cf">return</span> htl<span class="op">.</span><span class="fu">html</span><span class="vs">`&lt;button type="button" id="</span><span class="sc">${</span>iD<span class="sc">}</span><span class="vs">" style="border-radius: 20px;" onclick="showInfoCard(</span><span class="sc">${</span>iD<span class="sc">}</span><span class="vs">)"" class="options"&gt;</span><span class="sc">${</span>term<span class="sc">}</span><span class="vs">&lt;/button&gt;`</span></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>          }<span class="op">,</span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> { </span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    <span class="dt">term_plus_id</span><span class="op">:</span> <span class="dv">900</span><span class="op">,</span></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="50" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 49;"><span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co">// try to render by doing some loop (with htl.html)</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>viewof pol_terms_rows <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(policy_trm_search<span class="op">,</span> {</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="dt">columns</span><span class="op">:</span> [</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="st">'term_plus_id'</span><span class="op">,</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> {</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="st">'term_plus_id'</span><span class="op">:</span> x <span class="kw">=&gt;</span> {</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>          <span class="co">// delimiter -</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> indexDelim <span class="op">=</span> x<span class="op">.</span><span class="fu">indexOf</span>(<span class="st">'_'</span>)<span class="op">;</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>          <span class="co">// everything before is name</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> term <span class="op">=</span> x<span class="op">.</span><span class="fu">substring</span>(<span class="dv">0</span><span class="op">,</span> indexDelim)<span class="op">;</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>          <span class="co">// everything after is ID </span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> iD <span class="op">=</span> x<span class="op">.</span><span class="fu">substring</span>(indexDelim <span class="op">+</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>          <span class="cf">return</span> htl<span class="op">.</span><span class="fu">html</span><span class="vs">`&lt;button type="button" id="</span><span class="sc">${</span>iD<span class="sc">}</span><span class="vs">" style="border-radius: 20px;" onclick="showInfoCard(</span><span class="sc">${</span>iD<span class="sc">}</span><span class="vs">)"" class="options"&gt;</span><span class="sc">${</span>term<span class="sc">}</span><span class="vs">&lt;/button&gt;`</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>          }<span class="op">,</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> { </span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    <span class="dt">term_plus_id</span><span class="op">:</span> <span class="dv">900</span><span class="op">,</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
