@@ -92,6 +92,13 @@ h1, output {
     color: #E9E9E9;
 }
 
+.fe-bar-chart {
+    background-color: #ffffff;
+    border-radius: 12px;
+    margin-top: 1.5em;
+    padding: 1.2em;
+}
+
 .oi-ec050e-table tr:not(:last-child) td {
     border-bottom: none;
 }
