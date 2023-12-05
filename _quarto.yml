@@ -12,10 +12,10 @@ website:
       - href: policy_landing_page.qmd
         text: Policy Terms
       - href: mil_equip_landing_page.qmd
-        text: Military Equipment
+        text: Military Equipment 
       - href: about.qmd
       - href: map_view.qmd
-        text: Map View
+        text: Visualizations
 
 format:
   html:

@@ -44,9 +44,9 @@
   {
     "objectID": "map_view.html",
     "href": "map_view.html",
-    "title": "Map View",
+    "title": "Visualizations",
     "section": "",
-    "text": "Fatal Encounters\n\n\n\n\n\n\n\nca_only_tidy = transpose(fe_data).map(p =&gt; ({\n                                              // name: p.Name,  \n                                              date: new Date(p[' Date of injury resulting in death (month/day/year)']).getFullYear(), \n                                              count: 1, \n                                              race: p['Race with imputations'], \n                                              lea: p['Agency or agencies involved']}))\n\n\n\n\n\n\n\nviewof fe_ca_search = Inputs.search(ca_only_tidy, \n{placeholder: \"Enter a year, race, or police department name\", \nwidth: 900,\n})\n\n\n\n\n\n\n\n\nPlot.plot({\n  width: 1000,\n  height: 600,\n  x: {tickFormat: \"\"},\n  y: {tickSpacing: 50},\n  color: {legend: true},\n  marks: [\n  Plot.barY(fe_ca_search, {x: 'date', y: 'count', fill: 'race', sort: 'race'}),\n  ]\n})"
+    "text": "Fatal Encounters\n\n\n\n\n\n\n\nca_only_tidy = transpose(fe_data).map(p =&gt; ({\n                                              // name: p.Name,  \n                                              'Year': new Date(p[' Date of injury resulting in death (month/day/year)']).getFullYear(), \n                                              'Number of Fatal Encounters': 1, \n                                              'race': p['Race with imputations'], \n                                              'lea': p['Agency or agencies involved']}));\n\n\n\n\n\n\n\nviewof fe_ca_search = Inputs.search(ca_only_tidy, \n{placeholder: \"Enter a year, race, or police department name\", \nwidth: 900,\n})\n\n\n\n\n\n\n\n\n\n\n\nPlot.plot({\n  width: 1000,\n  height: 600,\n  x: {tickFormat: \"\"},\n  y: {tickSpacing: 50},\n  color: {legend: true},\n  marks: [\n  Plot.barY(ca_only_tidy, {x: 'Year', y: 'Number of Fatal Encounters', fill: 'race', sort: 'race'}),\n  ]\n})"
   },
   {
     "objectID": "map_view.html#preliminary-fe-data-visualizations",
@@ -54,5 +54,19 @@
     "title": "Map View",
     "section": "Preliminary FE Data Visualizations",
     "text": "Preliminary FE Data Visualizations\n\nEntire U.S.\nThe plot below visualizes the number of fatal encounters per year for all of the United States.\n\nviewof race_imputed = Inputs.radio(new Map([[\"Race with imputations\", 'raceImputed'], [\"Race with no imputations\", 'race']]), {value: 'raceImputed', label: \"Race imputed?\"})\n\n\n\n\n\n\n\nPlot.plot({\n  width: 928,\n  height: 500,\n  x: {tickFormat: \"\"},\n  y: {tickSpacing: 50},\n  color: {legend: true},\n  marks: [\n  Plot.barY(tidy_w_race, {x: 'date', y: 'count', fill: race_imputed, sort: race_imputed}),\n  ]\n})\n\n\n\n\n\n\nThe plot below visualizes the number of fatal encounters per year for all of the United States separated by state.\n\ntidy_no_race = tidy_w_race.map(d =&gt; ({date: d.date, count: d.count, state: d.state}))\n\n\n\n\n\n\n\nviewof fe_search_by_state = Inputs.checkbox(d3.group(tidy_no_race, p =&gt; p.state), {key: ['California', 'Georgia'], sort: \"ascending\", label: html`&lt;b&gt;Select 1 or more states&lt;/b&gt;`})\n\n\n\n\n\n\n\nPlot.plot({\n  width: 928,\n  height: 500,\n  x: {tickFormat: \"\"},\n  y: {tickSpacing: 50},\n  color: {legend: true},\n  marks: [\n  Plot.barY(fe_search_by_state.flat(), {x: 'date', y: 'count', fill: 'state', sort: 'state'}),\n  ]\n})\n\n\n\n\n\n\n\n\nCalifornia Only\nThe plot below visualizes the number of fatal encounters per year for California only.\nNote: the “race” column is derived from Fatal Encounter’s “Race with imputations” column\n\nca_only_tidy = ca_only.map(p =&gt; ({name: p.Name, date: new Date(p[' Date of injury resulting in death (month/day/year)']).getFullYear(), count: 1, race: p['Race with imputations'], lea: p['Agency or agencies involved']}))\n\n\n\n\n\n\n\nviewof fe_ca_search = Inputs.search(ca_only_tidy, \n{placeholder: \"Enter a name, year, race, or police department name\", \nwidth: 900,\nlabel: \"Search Fatal Encounter Dataset (CA only)\"\n})\n\n\n\n\n\n\n\nviewof fe_rows_ca = Inputs.table(fe_ca_search, \n{\n  columns: [\n    'name',\n    'date',\n    'race',\n    'lea',\n  ],\n  format: {\n    date : x =&gt; x.toFixed(0),\n    // 'Location of death (zip code)': x =&gt; x.toFixed(0),\n    // 'Supporting document link': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`,\n    // 'URL of image (PLS NO HOTLINKS)': x =&gt; htl.html`&lt;a href=${x} target=_blank&gt;${x}&lt;/a&gt;`\n  },\n  header: {\n    name: 'Name',\n    date: 'Date of death',\n    race: 'Race with imputations',\n    lea: 'Law Enforcement Agency/Agencies involved'\n  }\n} \n)\n\n\n\n\n\n\n\nPlot.plot({\n  width: 1000,\n  height: 600,\n  x: {tickFormat: \"\"},\n  y: {tickSpacing: 50},\n  color: {legend: true},\n  marks: [\n  Plot.barY(fe_ca_search, {x: 'date', y: 'count', fill: 'race', sort: 'race'}),\n  ]\n})"
+  },
+  {
+    "objectID": "map_view.html#law-enforcement-agency-involved",
+    "href": "map_view.html#law-enforcement-agency-involved",
+    "title": "Visualizations",
+    "section": "",
+    "text": "viewof lea = Inputs.checkbox(d3.group(ca_only_tidy, p =&gt; p.lea), {key: ca_only_tidy.lea, sort: \"ascending\"})"
+  },
+  {
+    "objectID": "map_view.html#year",
+    "href": "map_view.html#year",
+    "title": "Visualizations",
+    "section": "",
+    "text": "import {interval} from '@mootari/range-slider'\n// min = Math.min(...fe_data['Year'])\n// max = Math.max(...fe_data['Year'])\nviewof year = interval([2000, 2021], {\n  step: 1,\n  value: [2000, 2021],\n})\nconsole.log(year)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nfiltered = ca_only_tidy.filter(function(entry) {\n  return year[0] &lt;= entry.Year &lt;= year[1] &&\n         race.includes(entry.race) && lea.includes(entry.lea);\n})\n\n\n\n\n\n\n\n\nPlot.plot({\n  width: 1000,\n  height: 600,\n  x: {tickFormat: \"\"},\n  y: {tickSpacing: 50},\n  color: {legend: true},\n  marks: [\n  Plot.barY(filtered, {x: 'Year', y: 'Number of Fatal Encounters', fill: 'race', sort: 'race'}),\n  ]\n})"
   }
 ]

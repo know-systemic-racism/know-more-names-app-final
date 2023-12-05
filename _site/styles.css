@@ -71,10 +71,28 @@ body {
 
 #quarto-search {
     color: #E9E9E9;
-}
+}   
 
 #goback-btn {
     display: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #E9E9E9; /* Bootstrap primary color */
+    color: black;
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+ /* Hover effect */
+ #goback-btn:hover {
+    background-color: #EDD869; /* Darker shade for hover effect */
+    color: rgb(51, 51, 51);
+    border: 1px solid #0056b3;
 }
 
 .search-bar {

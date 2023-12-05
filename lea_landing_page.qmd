@@ -201,10 +201,10 @@ viewof fe_rows = Inputs.table(lea_search, {
 
 # Set a condition to determine whether to show the HTML element
 
-# html_content = """"""
+# html = """"""
 # if show_element:
 for entry in lea_data:
-    html_content = """
+    html = """
     <div id="{}" class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
         <h2>{}</h2>
         <p><a href="{}">Official Website</a></p>
@@ -212,7 +212,7 @@ for entry in lea_data:
         <p><a href="">Military Equipment Inventory</a></p>
     </div>
     """.format(entry['qid'], entry['lea_name'], entry['officialWebsite'])
-    display(HTML(html_content)) 
+    display(HTML(html)) 
 ```
 
 
