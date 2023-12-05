@@ -5,4 +5,57 @@ execute:
 # css: "/assets/dist/css/bootstrap.min.css" 
 ---
 
-### Fatal Encounters
+# Fatal Encounters
+
+```{python}
+import pandas as pd
+import plotly.express as px
+from urllib.request import urlopen
+```
+
+```{python}
+sheet_id = "1dKmaV_JiWcG8XBoRgP8b4e9Eopkpgt7FL7nyspvzAsE"
+sheet_name = "sample_1"
+url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+df = pd.read_csv(url)
+
+df['Age'].fillna('Not in Fatal Encounters dataset')
+df_ca_only = df.loc[df['State'] == 'CA']
+ojs_define(fe_data = df_ca_only)
+```
+
+```{ojs}
+ca_only_tidy = transpose(fe_data).map(p => ({
+                                              // name: p.Name,  
+                                              date: new Date(p[' Date of injury resulting in death (month/day/year)']).getFullYear(), 
+                                              count: 1, 
+                                              race: p['Race with imputations'], 
+                                              lea: p['Agency or agencies involved']}))
+```
+
+
+```{ojs}
+viewof fe_ca_search = Inputs.search(ca_only_tidy, 
+{placeholder: "Enter a year, race, or police department name", 
+width: 900,
+})
+```
+
+```{=html}
+<div class="fe-bar-chart">
+```
+```{ojs}
+Plot.plot({
+  width: 1000,
+  height: 600,
+  x: {tickFormat: ""},
+  y: {tickSpacing: 50},
+  color: {legend: true},
+  marks: [
+  Plot.barY(fe_ca_search, {x: 'date', y: 'count', fill: 'race', sort: 'race'}),
+  ]
+})
+```
+```{=html}
+</div>
+```

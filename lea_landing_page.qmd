@@ -57,10 +57,12 @@ df = pd.DataFrame(results)
 # df['item'] = df['item'].apply(isolateQID) 
 # print(df['item'])
 lea_data = []
+lea_names = set()
 for result in results:
     last_slash = result["item"]["value"].rindex('/')
     qid = result["item"]["value"][last_slash + 1:]
     name = result["itemLabel"]["value"]
+    lea_names.add(name)
     name_and_qid = name + '_' + qid
     lea_data.append({'lea_name': name, 'officialWebsite': result["officialWebsite"]["value"], 'name_plus_id': name_and_qid, 'qid': qid})
 ojs_define(lea_data = lea_data)
@@ -211,6 +213,45 @@ for entry in lea_data:
     """.format(entry['qid'], entry['lea_name'], entry['officialWebsite'])
     display(HTML(html_content)) 
 ```
+
+
+<!-- Load and visualize fatal encounters data -->
+```{python}
+# sheet_id = "1dKmaV_JiWcG8XBoRgP8b4e9Eopkpgt7FL7nyspvzAsE"
+# sheet_name = "sample_1"
+# url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+# df = pd.read_csv(url)
+
+# df['Age'].fillna('Not in Fatal Encounters dataset')
+# df_ca_only = df.loc[df['State'] == 'CA']
+
+# Make new, smaller DF with only essential data
+# year_and_death_ct = {}
+
+# for lea in lea_names:
+  # year_and_death_ct = {}
+  # build map for DF for graph
+  # for index, row in df_ca_only.iterrows():
+  #   if row['Agency or agencies involved'] != lea: continue 
+  #   year = row[' Date of injury resulting in death (month/day/year)'][-4:]
+  #   year_and_death_ct[year] = 1 + year_and_death_ct.get(year, 0)
+  # df_lea_min = pd.DataFrame()
+  # df_lea_min['Year'] = year_and_death_ct.keys()
+  # df_lea_min['Total Count'] = year_and_death_ct.values()
+  # fig = px.bar(df_lea_min, x='Year', y='Total Count')
+  # fig.show()
+
+# df_ca_only[' Date of injury resulting in death (month/day/year)'] = df_ca_only[' Date of injury resulting in death (month/day/year)'].apply(lambda x: x[-4:])
+# ojs_define(fe_data = df_ca_only)
+
+# for 
+# data_canada = px.data.gapminder().query("country == 'Canada'")
+
+# fig = px.bar(df_ca_only, x=' Date of injury resulting in death (month/day/year)', y='count', color='Agency or agencies involved')
+# fig.show()
+```
+
+
 
 
 
