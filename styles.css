@@ -24,9 +24,9 @@ body {
     position: absolute;
     animation: scrollAnimation 1400s linear infinite;
     display: flex;
-    flex-direction: column-reverse; /* Adjusted to make names scroll downward */
+    flex-direction: column-reverse; 
     justify-content: space-between;
-    height: 10000vh; /* Set to the desired height */
+    height: 10000vh; 
 }
 
 .home-pg-btns {
