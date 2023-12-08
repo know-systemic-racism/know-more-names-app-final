@@ -66,6 +66,9 @@ for result in results:
     lea_names.add(name)
     name_and_qid = name + '_' + qid
     lea_data.append({'lea_name': name, 'officialWebsite': result["officialWebsite"]["value"], 'name_plus_id': name_and_qid, 'qid': qid})
+
+
+# **** ??? open file to generate json file to read and then use for leaflet map 
 ojs_define(lea_data = lea_data)
 ``` 
 
@@ -81,7 +84,7 @@ for i in range(len(coords)):
   lat.append(float(coords[i]["value"][space + 1:-1]))
 df['Latitude'] = lat
 df['Longitude'] = long  
-
+ 
 
 fig_scatter = px.scatter_mapbox(df, 
                   lat='Latitude',
