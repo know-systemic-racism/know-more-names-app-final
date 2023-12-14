@@ -123,21 +123,21 @@ h1, output {
 }
 
 .fe-all-map {
-    background-color: #676767;
+    background-color: #999999;
     border-radius: 12px;
     margin-top: 1.5em;
     padding: 1.2em;
 }
 
-.fe-gender-checkboxes, .fe-race-checkboxes {
+/* .fe-gender-checkboxes, .fe-race-checkboxes {
     border: solid 1.1em #E9E9E9;
     border-radius: 12px;
     margin-top: 1.5em;
     padding: 1.2em;
-}
+} */
 
 .fe-wikidata-map {
-    background-color: #676767;
+    background-color: #999999;
     border-radius: 12px;
     margin-top: 1.5em;
     padding: 1.2em;
