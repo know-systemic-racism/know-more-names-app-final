@@ -2,68 +2,68 @@
 title: "Visualizations"
 execute:
     echo: false
+format:
+    html:
+        toc: false
+        echo: false
+        keep-hidden: false
+        code-tools: true
 # css: "/assets/dist/css/bootstrap.min.css" 
 ---
-<!-- ```{=html}
-<head>
-    <meta charset="utf-8">
-    <title>Create a time slider</title>
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
-    <style>
-    body { margin: 0; padding: 0; }
-    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-    </style>
-</head>
-<body>
-<style>
-    .map-overlay {
-        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-        position: absolute;
-        width: 25%;
-        top: 0;
-        left: 0;
-        padding: 10px;
-    }
 
-    .map-overlay .map-overlay-inner {
-        background-color: #fff;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        border-radius: 3px;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-
-    .map-overlay h2 {
-        line-height: 24px;
-        display: block;
-        margin: 0 0 10px;
-    }
-
-    .map-overlay .legend .bar {
-        height: 10px;
-        width: 100%;
-        background: linear-gradient(to right, #fca107, #7f3121);
-    }
-
-    .map-overlay input {
-        background-color: transparent;
-        display: inline-block;
-        width: 100%;
-        position: relative;
-        margin: 0;
-        cursor: ew-resize;
-    }
-</style>
-``` -->
-# Fatal Encounters
+# All Fatal Encounters
 
 ```{python}
+import sys
 import pandas as pd
+from pandas_geojson import to_geojson
+from SPARQLWrapper import SPARQLWrapper, JSON 
 import plotly.express as px
 from urllib.request import urlopen
-from IPython.display import HTML
+# from IPython.display import HTML
+```
+
+```{python}
+# Pull coordinates and titles of death events
+endpoint_url = "https://query.wikidata.org/sparql"
+query = """SELECT ?person ?personLabel ?coordinates
+              WHERE {
+                ?person p:P5008 ?statement0.
+                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
+                ?person p:P585 ?statement_1.
+                ?statement_1 psv:P585 ?statementValue_1.
+                ?statementValue_1 wikibase:timeValue ?P585_1.
+                ?person wdt:P625 ?coordinates.
+                
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        }"""
+
+def get_results(endpoint_url, query):
+    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
+    # TODO adjust user agent; see https://w.wiki/CX6
+    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    return sparql.query().convert()
+
+event_results = get_results(endpoint_url, query)["results"]["bindings"]
+df_coordinates = pd.DataFrame(event_results)
+lat = []
+long = []
+coords = df_coordinates['coordinates'].tolist()
+for i in range(len(coords)):
+  space = coords[i]["value"].index(' ')
+  long.append(float(coords[i]["value"][6:space]))
+  lat.append(float(coords[i]["value"][space + 1:-1]))
+  # names.append(labels[i]["value"][9:])
+df_coordinates['Latitude'] = lat
+df_coordinates['Longitude'] = long
+def isolate_person_name(entry): 
+  return entry["value"][9:]
+df_coordinates["personLabel"] = df_coordinates["personLabel"].map(isolate_person_name)
+geo_json = to_geojson(df=df_coordinates, lat='Latitude', lon='Longitude',
+                 properties=['personLabel'])
+ojs_define(geoJsonData = geo_json)
 ```
 
 ```{python}
@@ -75,15 +75,21 @@ df = pd.read_csv(url)
 df['Age'].fillna('Not in dataset')
 df['Race with imputations'].fillna('Not in dataset')
 df_ca_only = df.loc[df['State'] == 'CA']
-# df_ca_only['']
 ojs_define(fe_data = df_ca_only)
-# ojs_define(max_year = max_year)
-# ojs_define(min_year = min_year)
+
 ```
 
 ```{ojs}
+import {us} from "@observablehq/us-geographic-data"
+countiesFile = FileAttachment("ca_counties_geoverview.json").json()
+counties = topojson.feature(countiesFile, countiesFile.objects.counties)
+states = topojson.feature(us, us.objects.states)
+```
+```{ojs}
 ca_only_tidy = transpose(fe_data).map(p => ({
-                                              // name: p.Name,  
+                                              'name': p.Name,  
+                                              'Latitude': p['Latitude'],
+                                              'Longitude': p['Longitude'],
                                               'Year': new Date(p[' Date of injury resulting in death (month/day/year)']).getFullYear(), 
                                               'Number of Fatal Encounters': 1, 
                                               'race': p['Race with imputations'], 
@@ -96,23 +102,6 @@ width: 900,
 })
 ```
 
-<!-- ```{ojs}
-viewof race = Inputs.checkbox(ca_only_tidy, {format: x => x.race, sort: "ascending"});
-```
-### Law Enforcement Agency Involved
-```{ojs}
-viewof lea = Inputs.select(ca_only_tidy);
-// viewof lea = Inputs.checkbox(d3.group(ca_only_tidy, p => p.lea), {key: ca_only_tidy.lea, sort: "ascending"})
-filtered = ca_only_tidy.filter(function(entry) {
-  // return year[0] <= entry.Year <= year[1] &&
-         race.includes(entry.race) && lea.includes(entry.lea);
-})
-``` -->
-<!-- ### Year -->
-
-<!-- ```{ojs}
-
-``` -->
 ```{=html}
 <div class="fe-bar-chart">
 ```
@@ -124,153 +113,123 @@ Plot.plot({
   y: {tickSpacing: 50},
   color: {legend: true},
   marks: [
-  Plot.barY(ca_only_tidy, {x: 'Year', y: 'Number of Fatal Encounters', fill: 'race', sort: 'race'}),
+  Plot.barY(fe_ca_search, {x: 'Year', y: 'Number of Fatal Encounters', fill: 'race', sort: 'race'}),
   ]
 })
 ```
 ```{=html}
 </div>
-<div id="map"></div>
+```
+```{=html}
+<div class="fe-all-map">
+```
+```{ojs}
+Plot.plot({
+  width: 688,
+  height: 688,
+  projection: ({width, height}) => d3
+              .geoMercator()
+              .center([-119, 37.4])
+              .scale((1 << 18) / (28 * Math.PI))
+              .translate([320, 320]),
+  marks: [
+    Plot.geo(counties, { strokeOpacity: 0.8 }),
+    Plot.geo(states, { strokeOpacity: 0.3 }),
+    Plot.dot(fe_ca_search, {
+     x: "Longitude",
+     y: "Latitude",
+    //  r: "Total_MW",
+     fill: "orange",
+     fillOpacity: 0.2,
+     stroke: "orange",
+     title: (d) => `Name: ${d.name}\n Year: ${d.Year} \n Law Enforcement Agency Involved: ${d.lea}`,
+    //  href: (d) => d.properties['Agency or agencies involved'],
+     target: "_blank" 
+   })
+  ]
+})
+```
+```{=html}
+</div>
 ```
 
-<!-- ```{python}
-html = """
-    <div class="map-overlay top">
-        <div class="map-overlay-inner">
-            <h2>Significant earthquakes in 2015</h2>
-            <label id="month"></label>
-            <input id="slider" type="range" min="0" max="11" step="1" value="0">
-        </div>
-        <div class="map-overlay-inner">
-            <div id="legend" class="legend">
-                <div class="bar"></div>
-                <div>Magnitude (m)</div>
-            </div>
-        </div>
-    </div>
+# Wikidata Fatal Encounters
 
-    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script>
-      mapboxgl.accessToken = 'pk.eyJ1IjoiYWNvbG1lbmEiLCJhIjoiY2xsNGFibXozMDN3aTNybXo5dXllNTRxZCJ9.UBmukDP6IwkHjOkz5VmILA';
-        const map = new mapboxgl.Map({
-            container: 'map',
-            // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-            style: 'mapbox://styles/mapbox/light-v11',
-            projection: 'winkelTripel',
-            center: [-45, 0],
-            zoom: 0.25
-        });
+```{ojs}
+//| panel: input
+viewof gender = Inputs.checkbox(
+  ["Female", "Male", "Transgender Female", "Transgender Male"],
+  {
+    "label": "Gender",
+    "value": ["Female", "Male", "Transgender Female", "Transgender Male"],
+  }
+)
+```
 
-        const months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December'
-        ];
+```{ojs}
+//| panel: input
+viewof race = Inputs.checkbox(
+  ["African American", "Latine", "European-American/White", "Asian/Pacific Islander", "Native American/Alaskan", ""],
+  {
+    "label": "Race/Ethnicity",
+    "value": ["African American", "Latine", "European-American/White", "Asian/Pacific Islander", "Native American/Alaskan", ""],
+  }
+)
+```
 
-        function filterBy(month) {
-            const filters = ['==', 'month', month];
-            map.setFilter('earthquake-circles', filters);
-            map.setFilter('earthquake-labels', filters);
+```{ojs}
+// a function that will return the dataset filtered by whether the PrimSource property is in the list of energy_type values.
 
-            // Set the label to the month
-            document.getElementById('month').textContent = months[month];
-        }
+filtered = ca_only_tidy.filter(function(person) {
+  return gender.indexOf(person.Gender) >= 0
+})
+```
 
-        map.on('load', () => {
-            // Data courtesy of http://earthquake.usgs.gov/
-            // Query for significant earthquakes in 2015 URL request looked like this:
-            // http://earthquake.usgs.gov/fdsnws/event/1/query
-            //    ?format=geojson
-            //    &starttime=2015-01-01
-            //    &endtime=2015-12-31
-            //    &minmagnitude=6'
-            //
-            // Here we're using d3 to help us make the ajax request but you can use
-            // Any request method (library or otherwise) you wish.
-            d3.json(
-                'https://docs.mapbox.com/mapbox-gl-js/assets/significant-earthquakes-2015.geojson',
-                jsonCallback
-            );
-        });
+```{ojs}
+// create a function that returns a consistent color for an energy source
 
-        function jsonCallback(err, data) {
-            if (err) {
-                throw err;
-            }
+colors = function(source) {
+  return {
+    "coal": "darkgray",
+    "male": "orange",
+    "female": "green",
+    "trans": "yellow",
+    "wind": "palegreen"
+  }[source]
+}
+```
+```{=html}
+<div class="fe-wikidata-map">
+```
+```{ojs}
+// now map using the filtered and colors functions:
+Plot.plot({
+  width: 688,
+  height: 688,
+  projection: ({width, height}) => d3
+              .geoMercator()
+              .center([-119, 37.4])
+              .scale((1 << 18) / (28 * Math.PI))
+              .translate([320, 320]),
+  marks: [
+    Plot.geo(counties, { strokeOpacity: 0.8 }),
+    Plot.geo(states, { strokeOpacity: 0.3 }),
+    Plot.geo(geoJsonData, {
+    //  x: "Longitude",
+    //  y: "Latitude",
+    //  r: "Total_MW",
+     fill: "orange",
+     fillOpacity: 0.2,
+     stroke: "orange",
+     title: (d) => `Name: ${d.properties.personLabel}`,
+    //  href: (d) => d.properties['Agency or agencies involved'],
+     target: "_blank" 
+   })
+  ]
+})
+```
+```{=html}
+</div>
+```
 
-            // Create a month property value based on time
-            // used to filter against.
-            data.features = data.features.map((d) => {
-                d.properties.month = new Date(d.properties.time).getMonth();
-                return d;
-            });
 
-            map.addSource('earthquakes', {
-                'type': 'geojson',
-                data: data
-            });
-
-            map.addLayer({
-                'id': 'earthquake-circles',
-                'type': 'circle',
-                'source': 'earthquakes',
-                'paint': {
-                    'circle-color': [
-                        'interpolate',
-                        ['linear'],
-                        ['get', 'mag'],
-                        6,
-                        '#FCA107',
-                        8,
-                        '#7F3121'
-                    ],
-                    'circle-opacity': 0.75,
-                    'circle-radius': [
-                        'interpolate',
-                        ['linear'],
-                        ['get', 'mag'],
-                        6,
-                        20,
-                        8,
-                        40
-                    ]
-                }
-            });
-
-            map.addLayer({
-                'id': 'earthquake-labels',
-                'type': 'symbol',
-                'source': 'earthquakes',
-                'layout': {
-                    'text-field': ['concat', ['to-string', ['get', 'mag']], 'm'],
-                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                    'text-size': 12
-                },
-                'paint': {
-                    'text-color': 'rgba(0,0,0,0.5)'
-                }
-            });
-
-            // Set filter to first month of the year
-            // 0 = January
-            filterBy(0);
-
-            document.getElementById('slider').addEventListener('input', (e) => {
-                const month = parseInt(e.target.value, 10);
-                filterBy(month);
-            });
-        }
-    </script>
-    </body>
-       """
-    display(HTML(html))
-``` -->
