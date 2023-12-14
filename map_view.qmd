@@ -12,7 +12,6 @@ format:
 ---
 
 # All Fatal Encounters
-
 ```{python}
 import sys
 import pandas as pd
@@ -22,50 +21,6 @@ import plotly.express as px
 from urllib.request import urlopen
 # from IPython.display import HTML
 ```
-
-```{python}
-# Pull coordinates and titles of death events
-endpoint_url = "https://query.wikidata.org/sparql"
-query = """SELECT ?person ?personLabel ?coordinates
-              WHERE {
-                ?person p:P5008 ?statement0.
-                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
-                ?person p:P585 ?statement_1.
-                ?statement_1 psv:P585 ?statementValue_1.
-                ?statementValue_1 wikibase:timeValue ?P585_1.
-                ?person wdt:P625 ?coordinates.
-                
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-        }"""
-
-def get_results(endpoint_url, query):
-    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
-    # TODO adjust user agent; see https://w.wiki/CX6
-    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    return sparql.query().convert()
-
-event_results = get_results(endpoint_url, query)["results"]["bindings"]
-df_coordinates = pd.DataFrame(event_results)
-lat = []
-long = []
-coords = df_coordinates['coordinates'].tolist()
-for i in range(len(coords)):
-  space = coords[i]["value"].index(' ')
-  long.append(float(coords[i]["value"][6:space]))
-  lat.append(float(coords[i]["value"][space + 1:-1]))
-  # names.append(labels[i]["value"][9:])
-df_coordinates['Latitude'] = lat
-df_coordinates['Longitude'] = long
-def isolate_person_name(entry): 
-  return entry["value"][9:]
-df_coordinates["personLabel"] = df_coordinates["personLabel"].map(isolate_person_name)
-geo_json = to_geojson(df=df_coordinates, lat='Latitude', lon='Longitude',
-                 properties=['personLabel'])
-ojs_define(geoJsonData = geo_json)
-```
-
 ```{python}
 sheet_id = "1dKmaV_JiWcG8XBoRgP8b4e9Eopkpgt7FL7nyspvzAsE"
 sheet_name = "sample_1"
@@ -76,7 +31,6 @@ df['Age'].fillna('Not in dataset')
 df['Race with imputations'].fillna('Not in dataset')
 df_ca_only = df.loc[df['State'] == 'CA']
 ojs_define(fe_data = df_ca_only)
-
 ```
 
 ```{ojs}
@@ -154,14 +108,96 @@ Plot.plot({
 ```
 
 # Wikidata Fatal Encounters
+```{python}
+# Pull records of fatal encounter victims
+endpoint_url = "https://query.wikidata.org/sparql"
+query = """SELECT ?person ?personLabel ?placeOfDeathLabel ?sexOrGenderLabel ?ethnicGroupLabel ?dateOfDeathLabel
+          WHERE {
+            ?person wdt:P5008 wd:Q120754096.
+            ?person wdt:P21 ?sexOrGender.
+            ?person wdt:P172 ?ethnicGroup.
+            ?person wdt:P570 ?dateOfDeath.
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+          }"""
 
+def get_results(endpoint_url, query):
+    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
+    # TODO adjust user agent; see https://w.wiki/CX6
+    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    return sparql.query().convert()
+
+person_results = get_results(endpoint_url, query)["results"]["bindings"]
+clean_fe_arr = []
+for result in person_results:
+  last_slash = result["person"]["value"].rindex('/')
+  qid = result["person"]["value"][last_slash + 1:]
+  name = result["personLabel"]["value"]
+#   name_and_qid = name + '_' + qid
+  clean_fe_arr.append({
+                  'personLabel': name, 
+                #   'name_plus_id': name_and_qid, 
+                  'qid': qid, 
+                  'ethnicGroupLabel': result['ethnicGroupLabel']['value'][:-1], 
+                  'sexOrGenderLabel': result['sexOrGenderLabel']['value'],
+                  'dateOfDeathLabel': result['dateOfDeathLabel']['value'],
+                })
+df_people = pd.DataFrame(clean_fe_arr)
+```
+```{python}
+# Pull coordinates and titles of Death Event Entries
+endpoint_url = "https://query.wikidata.org/sparql"
+query = """SELECT ?person ?personLabel ?coordinates
+              WHERE {
+                ?person p:P5008 ?statement0.
+                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
+                ?person p:P585 ?statement_1.
+                ?statement_1 psv:P585 ?statementValue_1.
+                ?statementValue_1 wikibase:timeValue ?P585_1.
+                ?person wdt:P625 ?coordinates.
+                
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+        }"""
+
+def get_results(endpoint_url, query):
+    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
+    # TODO adjust user agent; see https://w.wiki/CX6
+    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    return sparql.query().convert()
+
+event_results = get_results(endpoint_url, query)["results"]["bindings"]
+df_coordinates = pd.DataFrame(event_results)
+lat = []
+long = []
+coords = df_coordinates['coordinates'].tolist()
+for i in range(len(coords)):
+  space = coords[i]["value"].index(' ')
+  long.append(float(coords[i]["value"][6:space]))
+  lat.append(float(coords[i]["value"][space + 1:-1]))
+  # names.append(labels[i]["value"][9:])
+df_coordinates['Latitude'] = lat
+df_coordinates['Longitude'] = long
+del df_coordinates['coordinates']  # delete old coordinates column
+del df_coordinates['person']  # delete old person column
+def isolate_person_name(entry): 
+  return entry["value"][9:]
+df_coordinates["personLabel"] = df_coordinates["personLabel"].map(isolate_person_name)
+# Combine people entries and death event entries
+combine_df = pd.merge(df_coordinates, df_people, on='personLabel')
+# print(combine_df)
+# geo_json = to_geojson(df=combine_df, lat='Latitude', lon='Longitude',
+#                  properties=['personLabel', 'qid', 'ethnicGroupLabel', 'sexOrGenderLabel', 'dateOfDeathLabel'])
+```
 ```{ojs}
 //| panel: input
 viewof gender = Inputs.checkbox(
-  ["Female", "Male", "Transgender Female", "Transgender Male"],
+  ["Female", "Male", "Transgender", "Trans Woman"],
   {
     "label": "Gender",
-    "value": ["Female", "Male", "Transgender Female", "Transgender Male"],
+    "value": ["Female", "Male", "Transgender", "Trans Woman"],
   }
 )
 ```
@@ -169,19 +205,21 @@ viewof gender = Inputs.checkbox(
 ```{ojs}
 //| panel: input
 viewof race = Inputs.checkbox(
-  ["African American", "Latine", "European-American/White", "Asian/Pacific Islander", "Native American/Alaskan", ""],
+  ["African American", "Latine", "European-American/White", "Asian/Pacific Islander", "Native American/Alaskan", "Race Unspecified"],
   {
     "label": "Race/Ethnicity",
-    "value": ["African American", "Latine", "European-American/White", "Asian/Pacific Islander", "Native American/Alaskan", ""],
+    "value": ["African American", "Latine", "European-American/White", "Asian/Pacific Islander", "Native American/Alaskan", "Race Unspecified"],
   }
 )
+```
+```{python}
+ojs_define(combineDf = combine_df)
 ```
 
 ```{ojs}
 // a function that will return the dataset filtered by whether the PrimSource property is in the list of energy_type values.
-
-filtered = ca_only_tidy.filter(function(person) {
-  return gender.indexOf(person.Gender) >= 0
+filtered = combineDf.filter(function(person) {
+  return gender.indexOf(person.sexOrGenderLabel) >= 0 && race.indexOf(person.ethnicGroupLabel) >= 0
 })
 ```
 
@@ -214,14 +252,14 @@ Plot.plot({
   marks: [
     Plot.geo(counties, { strokeOpacity: 0.8 }),
     Plot.geo(states, { strokeOpacity: 0.3 }),
-    Plot.geo(geoJsonData, {
-    //  x: "Longitude",
-    //  y: "Latitude",
+    Plot.dot(filtered, {
+     x: "Longitude",
+     y: "Latitude",
     //  r: "Total_MW",
      fill: "orange",
      fillOpacity: 0.2,
      stroke: "orange",
-     title: (d) => `Name: ${d.properties.personLabel}`,
+     title: (d) => `Name: ${d.personLabel}`,
     //  href: (d) => d.properties['Agency or agencies involved'],
      target: "_blank" 
    })
