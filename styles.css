@@ -8,6 +8,10 @@ body {
     
 }
 
+.instructions {
+    color: #FFFFFF;
+}
+
 .aa-DetachedSearchButtonIcon {
     color: #E9E9E9;
 }
@@ -39,7 +43,6 @@ body {
     margin: 10px;
     font-weight:700; 
     font-size: x-large;
-
 }
 
 .home-pg-btns:hover {
@@ -51,7 +54,7 @@ body {
       transform: translateY(0);
     }
     100% {
-      transform: translateY(calc(100% - 20px)); /* Adjusted for downward scrolling */
+      transform: translateY(calc(100% - 20px)); 
     }
 }
 
@@ -89,9 +92,8 @@ body {
     margin-bottom: 1.5em;
 }
 
- /* Hover effect */
- #goback-btn:hover {
-    background-color: #EDD869; /* Darker shade for hover effect */
+#goback-btn:hover {
+    background-color: #EDD869; 
     color: rgb(51, 51, 51);
     border: 1px solid #0056b3;
 }
@@ -149,6 +151,10 @@ h1, output {
 }
 
 th {
+    display: none;
+}
+
+.oi-3a86ea-table tr>:first-of-type input {
     display: none;
 }
 

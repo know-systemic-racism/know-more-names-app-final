@@ -7,11 +7,17 @@ format:
         toc: false
         echo: false
         keep-hidden: false
-        code-tools: true
 # css: "/assets/dist/css/bootstrap.min.css" 
 ---
 
 # All Fatal Encounters
+```{=html}
+<p class="instructions">
+```
+Filter the bar chart and map below.
+```{=html}
+</p>
+```
 ```{python}
 import sys
 import pandas as pd
@@ -93,10 +99,10 @@ Plot.plot({
      x: "Longitude",
      y: "Latitude",
     //  r: "Total_MW",
-     fill: "orange",
-     fillOpacity: 0.2,
+     fill: "yellow",
+     fillOpacity: 0.6,
      stroke: "orange",
-     title: (d) => `Name: ${d.name}\n Year: ${d.Year} \n Law Enforcement Agency Involved: ${d.lea}`,
+     title: (d) => `Name: ${d.name}\nYear: ${d.Year}\nLaw Enforcement Agency Involved: ${d.lea}`,
     //  href: (d) => d.properties['Agency or agencies involved'],
      target: "_blank" 
    })
@@ -255,8 +261,8 @@ Plot.plot({
      x: "Longitude",
      y: "Latitude",
     //  r: "Total_MW",
-     fill: "orange",
-     fillOpacity: 0.2,
+     fill: "yellow",
+     fillOpacity: 0.6,
      stroke: "orange",
      title: (d) => `Name: ${d.personLabel}`,
     //  href: (d) => d.properties['Agency or agencies involved'],
@@ -268,7 +274,7 @@ Plot.plot({
 ```{=html}
 </div>
 ```
-# Wikidata Law Enforcement Agencies 
+<!-- # Wikidata Law Enforcement Agencies  -->
 ```{python}
 endpoint_url = "https://query.wikidata.org/sparql"
 
@@ -307,7 +313,42 @@ for result in results:
     lea_names.add(name)
     name_and_qid = name + '_' + qid
     lea_data.append({'lea_name': name, 'officialWebsite': result["officialWebsite"]["value"], 'name_plus_id': name_and_qid, 'qid': qid})
+lat = []
+long = []
+coords = df['coordinates'].tolist()
 
+for i in range(len(coords)):
+  space = coords[i]["value"].index(' ')
+  long.append(float(coords[i]["value"][6:space]))
+  lat.append(float(coords[i]["value"][space + 1:-1]))
+df['Latitude'] = lat
+df['Longitude'] = long  
 ojs_define(lea_data = lea_data)
 ``` 
-
+<!-- ```{ojs}
+// now map using the filtered and colors functions:
+Plot.plot({
+  width: 688,
+  height: 688,
+  projection: ({width, height}) => d3
+              .geoMercator()
+              .center([-119, 37.4])
+              .scale((1 << 18) / (28 * Math.PI))
+              .translate([320, 320]),
+  marks: [
+    Plot.geo(counties, { strokeOpacity: 0.8 }),
+    Plot.geo(states, { strokeOpacity: 0.3 }),
+    Plot.dot(transpose(lea_data), {
+     x: "Longitude",
+     y: "Latitude",
+    //  r: "Total_MW",
+     fill: "orange",
+     fillOpacity: 0.2,
+     stroke: "orange",
+     title: (d) => `Name: ${d.personLabel}`,
+    //  href: (d) => d.properties['Agency or agencies involved'],
+     target: "_blank" 
+   })
+  ]
+})
+``` -->
