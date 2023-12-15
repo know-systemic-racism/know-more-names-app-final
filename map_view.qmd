@@ -140,7 +140,7 @@ for result in person_results:
                 #   'name_plus_id': name_and_qid, 
                   'qid': qid, 
                   'ethnicGroupLabel': result['ethnicGroupLabel']['value'][:-1], 
-                  'sexOrGenderLabel': result['sexOrGenderLabel']['value'],
+                  'sexOrGenderLabel': result['sexOrGenderLabel']['value'][0].upper() + result['sexOrGenderLabel']['value'][1:],
                   'dateOfDeathLabel': result['dateOfDeathLabel']['value'],
                 })
 df_people = pd.DataFrame(clean_fe_arr)
@@ -177,7 +177,6 @@ for i in range(len(coords)):
   space = coords[i]["value"].index(' ')
   long.append(float(coords[i]["value"][6:space]))
   lat.append(float(coords[i]["value"][space + 1:-1]))
-  # names.append(labels[i]["value"][9:])
 df_coordinates['Latitude'] = lat
 df_coordinates['Longitude'] = long
 del df_coordinates['coordinates']  # delete old coordinates column
@@ -208,7 +207,7 @@ viewof race = Inputs.checkbox(
   ["African American", "Latine", "European-American/White", "Asian/Pacific Islander", "Native American/Alaskan", "Race Unspecified"],
   {
     "label": "Race/Ethnicity",
-    "value": ["African American", "Latine", "European-American/White", "Asian/Pacific Islander", "Native American/Alaskan", "Race Unspecified"],
+    "value": ["African American"],
   }
 )
 ```
@@ -218,7 +217,7 @@ ojs_define(combineDf = combine_df)
 
 ```{ojs}
 // a function that will return the dataset filtered by whether the PrimSource property is in the list of energy_type values.
-filtered = combineDf.filter(function(person) {
+filtered = transpose(combineDf).filter(function(person) {
   return gender.indexOf(person.sexOrGenderLabel) >= 0 && race.indexOf(person.ethnicGroupLabel) >= 0
 })
 ```
@@ -269,5 +268,46 @@ Plot.plot({
 ```{=html}
 </div>
 ```
+# Wikidata Law Enforcement Agencies 
+```{python}
+endpoint_url = "https://query.wikidata.org/sparql"
 
+query = """
+        SELECT DISTINCT ?item ?itemLabel ?coordinates ?officialWebsite WHERE {
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+            {
+                ?item p:P5008 ?statement0.
+                ?statement0 (ps:P5008/(wdt:P279*)) wd:Q120754096.
+                ?item p:P31 ?statement1.
+                ?statement1 (ps:P31/(wdt:P279*)) wd:Q732717.
+                ?item wdt:P625 ?coordinates.
+                ?item wdt:P856 ?officialWebsite.
+            }
+        }
+        """
+
+def get_results(endpoint_url, query):
+    user_agent = "WDQS-example Python/%s.%s" % (sys.version_info[0], sys.version_info[1])
+    # TODO adjust user agent; see https://w.wiki/CX6
+    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    return sparql.query().convert()
+
+# API results
+results = get_results(endpoint_url, query)["results"]["bindings"]
+df = pd.DataFrame(results)
+
+lea_data = []
+lea_names = set()
+for result in results:
+    last_slash = result["item"]["value"].rindex('/')
+    qid = result["item"]["value"][last_slash + 1:]
+    name = result["itemLabel"]["value"]
+    lea_names.add(name)
+    name_and_qid = name + '_' + qid
+    lea_data.append({'lea_name': name, 'officialWebsite': result["officialWebsite"]["value"], 'name_plus_id': name_and_qid, 'qid': qid})
+
+ojs_define(lea_data = lea_data)
+``` 
 
