@@ -48,57 +48,44 @@ def get_results(endpoint_url, query):
 
 # API results
 results = get_results(endpoint_url, query)["results"]["bindings"]
-df = pd.DataFrame(results)
+# df = pd.DataFrame(results)
 
-# def isolateQID(x):
-#     last_slash = x["value"].rindex('/')
-#     x = x["value"][last_slash + 1:]
-
-
-# df['item'] = df['item'].apply(isolateQID) 
-# print(df['item'])
 lea_data = []
 lea_names = set()
 for result in results:
     last_slash = result["item"]["value"].rindex('/')
     qid = result["item"]["value"][last_slash + 1:]
     name = result["itemLabel"]["value"]
+    coordinates = result["coordinates"]
     lea_names.add(name)
     name_and_qid = name + '_' + qid
-    lea_data.append({'lea_name': name, 'officialWebsite': result["officialWebsite"]["value"], 'name_plus_id': name_and_qid, 'qid': qid})
-
-
+    lea_data.append({'lea_name': name, 'officialWebsite': result["officialWebsite"]["value"], 'name_plus_id': name_and_qid, 'qid': qid, 'coordinates': coordinates})
 # **** ??? open file to generate json file to read and then use for leaflet map 
 ojs_define(lea_data = lea_data)
 ``` 
 
 ```{python}
 # Map LEA data
+df = pd.DataFrame(lea_data)
 lat = []
 long = []
 coords = df['coordinates'].tolist()
-
 for i in range(len(coords)):
   space = coords[i]["value"].index(' ')
   long.append(float(coords[i]["value"][6:space]))
   lat.append(float(coords[i]["value"][space + 1:-1]))
 df['Latitude'] = lat
 df['Longitude'] = long  
- 
-
+del df['coordinates']
+# print(df)
 fig_scatter = px.scatter_mapbox(df, 
                   lat='Latitude',
                   lon='Longitude',
-                  hover_name= df["itemLabel"],
-                  # hover_data={ 
-                  #                 'Age': True, 
-                  #                 'Gender': True, 
-                  #                 'Race with imputations': True, 
-                  #                 ' Date of injury resulting in death (month/day/year)': True, 
-                  #                 'Agency or agencies involved': True,
-                  #                 'Latitude':False,
-                  #                 'Longitude': False
-                  #             },
+                  hover_name= df["lea_name"],
+                  hover_data={ 
+                                  'Latitude':False,
+                                  'Longitude': False
+                              },
                   color_continuous_scale=px.colors.cyclical.IceFire, 
                   size_max=15, 
                   zoom=10,

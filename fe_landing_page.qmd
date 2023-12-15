@@ -127,6 +127,10 @@ fig_scatter = px.scatter_mapbox(df,
                   lat='Latitude',
                   lon='Longitude',
                   hover_name= df["personLabel"],
+                  hover_data={ 
+                                  'Latitude':False,
+                                  'Longitude': False
+                              },
                   color_continuous_scale=px.colors.cyclical.IceFire, 
                   size_max=15, 
                   zoom=10,
@@ -167,11 +171,11 @@ fig_ca_counties.add_trace(
 #     )
 # )
 
-fig_ca_counties.update_traces(
-    hovertemplate='<button type="button" id="%{qid}" style="border-radius: 20px;" onclick="showInfoCard(%{qid})"" class="options">%{full_name}</button>',
-)
+# fig_ca_counties.update_traces(
+#     hovertemplate='<button type="button" id="%{qid}" style="border-radius: 20px;" onclick="showInfoCard(%{qid})"" class="options">%{full_name}</button>',
+# )
 
-fig_ca_counties.update_layout(hovermode='closest', mapbox=dict(style='open-street-map'))
+# fig_ca_counties.update_layout(hovermode='closest', mapbox=dict(style='open-street-map'))
 fig_ca_counties.show()
 ```
 ```{=html}
