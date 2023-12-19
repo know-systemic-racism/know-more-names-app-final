@@ -8,12 +8,13 @@ body {
     
 }
 
-h1 {
+#home-pg-title {
     background-color: #414141;
     text-align: center;
     margin-top: 0em;
     padding-top: 1.5em;
     padding-bottom: 1em;
+    opacity: 100%;
 }
 
 .instructions {
