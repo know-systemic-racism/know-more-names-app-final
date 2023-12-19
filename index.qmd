@@ -9,16 +9,21 @@ sidebar: false
 ---
 
 ```{=html}
+
+<!-- <head><h1>Do you know about</h1></head> -->
 <body style="overflow: hidden;">
-<h1>Do you know about</h1>
+<!-- <nav class="navbar navbar-expand-lg"></nav> -->
+```
+
+```{python}
+import sys
+from SPARQLWrapper import SPARQLWrapper, JSON
+from IPython.display import HTML
+import random
 ```
 
 ```{python}
 # !pip install SPARQLWrapper
-import sys
-from SPARQLWrapper import SPARQLWrapper, JSON
-from IPython.display import HTML
-
 endpoint_url = "https://query.wikidata.org/sparql"
 
 query = """
@@ -63,7 +68,8 @@ for i in range(len(results)):
 # rand_ints = []
 # for i in range(10):
 #   rand_ints.append(randint(0, len(results)))
-print(len(results))
+# print(len(results))
+random.shuffle(results)  # shuffle results 
 for i in range(len(results)):
   wk_entry = results[i]
   label = wk_entry["label"]
@@ -96,6 +102,11 @@ for i in range(len(results)):
 ```{=html} 
   </div>
 </body>
+<script>
+  let lastHeaderElem = document.querySelector("nav");
+  lastHeaderElem.insertAdjacentHTML('afterend', "<h1>Do you know about</h1>",
+  );
+</script>
 ```
 
 
