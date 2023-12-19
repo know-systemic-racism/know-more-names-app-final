@@ -16,12 +16,16 @@ website:
       - href: about.qmd
       - href: map_view.qmd
         text: Visualizations
+    right:
+      - icon: github
+        href: https://github.com/know-systemic-racism/know-more-names-app-final
+        aria-label: GitHub
 
 format:
   html:
     theme: cosmo
     css: styles.css
-    toc: true
+    # toc: true
 
 
  
