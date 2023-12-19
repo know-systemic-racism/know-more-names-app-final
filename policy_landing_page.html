@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.521">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -79,7 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -88,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -96,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
@@ -107,9 +114,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Know More Names</span>
     </a>
@@ -121,40 +128,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./fe_landing_page.html" rel="" target="">
- <span class="menu-text">Fatal Encounters</span></a>
+    <a class="nav-link" href="./fe_landing_page.html"> 
+<span class="menu-text">Fatal Encounters</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./lea_landing_page.html" rel="" target="">
- <span class="menu-text">Law Enforcement Agencies</span></a>
+    <a class="nav-link" href="./lea_landing_page.html"> 
+<span class="menu-text">Law Enforcement Agencies</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./policy_landing_page.html" rel="" target="" aria-current="page">
- <span class="menu-text">Policy Terms</span></a>
+    <a class="nav-link active" href="./policy_landing_page.html" aria-current="page"> 
+<span class="menu-text">Policy Terms</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./mil_equip_landing_page.html" rel="" target="">
- <span class="menu-text">Military Equipment</span></a>
+    <a class="nav-link" href="./mil_equip_landing_page.html"> 
+<span class="menu-text">Military Equipment</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./map_view.html" rel="" target="">
- <span class="menu-text">Visualizations</span></a>
+    <a class="nav-link" href="./map_view.html"> 
+<span class="menu-text">Visualizations</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/know-systemic-racism/know-more-names-app-final" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub">
+    <a class="nav-link" href="https://github.com/know-systemic-racism/know-more-names-app-final"> <i class="bi bi-github" role="img" aria-label="GitHub">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -181,12 +188,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<button id="goback-btn" onclick="goBack()">Back to search</button>
-<div class="cell" data-execution_count="4">
-<div class="cell-output cell-output-display">
 
+<button id="goback-btn" onclick="goBack()">Back to search</button>
+<div id="ff2e629e" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
 <script type="ojs-define">{"contents": [{"name": "data", "value": {"id": ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10", "q11", "q12", "q13", "q14", "q15", "q16", "q17", "q18", "q19", "q20"], "Term": ["Minimum", "Reasonable, reasonably, and reasonableness", "Feasible", "Totality of the circumstances", "De-escalation", "Necessary", "Proportional (or proportionality)", "Non-deadly", "Fair and Unbiased", "Intercede", "Objectively reasonable (officer/standard)", "Reasonable officer", "Reasonably believe(s)", "Reasonably perceived", "Reasonably appear(s)", "Reasonable force", "Perceived by the officer", "Well-reasoned discretion", "Split-second ", "Quick judgement"], "Definition": ["the least quantity assignable, admissible, or possible", "Just, rational, appropriate, ordinary, or usual in the circumstances", " capable of being done or carried out", "refers to a method of analysis where decisions are based on all available information", "behavior or action intended to slow or escape escalations of conflicts, often as an approach in conflict resolution", "\"Necessary\" means that no reasonably effective alternative to the use of force appeared to exist and that the amount of force used was reasonable to effect the lawful purpose intended.", "a logical method intended to assist in discerning the correct balance between the restriction imposed by a corrective measure and the severity of the nature of the prohibited act.", "Not capable of causing death.", "free from favor toward either or any side", "prevent the use of excessive force by another officer if they are able to do so", null, null, null, null, null, null, null, null, null, null], "Definition Source": ["https://www.merriam-webster.com/dictionary/minimum", "https://www.law.cornell.edu/wex/reasonable#:~:text=Just%2C%20rational%2C%20appropriate%2C%20ordinary,or%20usual%20in%20the%20circumstances.", "https://www.merriam-webster.com/dictionary/feasible", "https://www.wikidata.org/wiki/Q25245643", "https://www.wikidata.org/wiki/Q1182511", "https://apps.leg.wa.gov/rcw/default.aspx?cite=9A.16.010#:~:text=(1)%20%22Necessary%22%20means,effect%20the%20lawful%20purpose%20intended.", "https://en.wikipedia.org/wiki/Proportionality_(law)", "https://en.wiktionary.org/wiki/non-lethal", "https://www.merriam-webster.com/dictionary/unbiased#:~:text=fair%2C%20just%2C%20equitable%2C%20impartial,what%20is%20right%20and%20proper.", "https://www.firstforward.com/Marketplace/Detail/2ea8f777-d8db-11eb-81f7-9693a0ba00c3", null, null, null, null, null, null, null, null, null, null], "Term in context": ["MINIMUM USE OF FORCE. The police should use physical force to the extent\r\nnecessary to secure observance of the law or to restore order when the exercise of\r\npersuasion, advice, and warning is found to be insufficient to achieve police objectives\r\nand police should use only the reasonable amount of physical force which is necessary on\r\nany particular occasion for achieving a police objective.\" (LAPD, Volume 1, pg. 4)\r", "\"Officers are involved on a daily basis in numerous and varied interactions and, when warranted, may use reasonable force in carrying out their duties.\"", "\"Where feasible, a peace officer shall, prior to the use of any force,\nmake reasonable efforts to identify themselves as a peace officer and to warn that force\nmay be used, unless the officer has objectively reasonable grounds to believe that the\nperson is aware of those facts.\" (LAPD, Volume 1, pg. 67)", "\"In addition to California Penal Code 835(a), the Department shall evaluate\r\nwhether deadly force was necessary by looking at : a) the totality of the circumstances\r\nfrom the perspective of a reasonable Los Angeles Police Officer with similar training and\r\nexperience; b) the factors used to evaluate whether force is objectively reasonable; c) an\r\nevaluation of whether the officer exhausted the available and feasible alternatives to\r\ndeadly force; and d) whether a warning was feasible and/or given.\r\" (LAPD, Volume 1, pg. 69)", "\"It is the policy of this Department that, whenever\r\nfeasible, officers shall use techniques and tools consistent with department de-escalation\r\ntraining to reduce the intensity of any encounter with a suspect and enable an officer to\r\nhave additional options to mitigate the need to use a higher level of force while\r\nmaintaining control of the situation.\" (LAPD, Volume 1, pg. 67)", "\"Officers may use deadly force only when they reasonably believe, based on the totality of\ncircumstances, that such force is necessary in defense of human life.\" (LAPD, Volume 1, pg. 67)", "\"Officers may only use a level of force that they reasonably believe is\nproportional to the seriousness of the suspected offense or the reasonably perceived level\nof actual or threatened resistance.\" (LAPD, Volume 1, pg. 67)", "\"It is the policy of this Department that personnel may use\r\nonly that force which is \"objectively reasonable\" to:\r\n\u2022 Defend themselves;\r\n\u2022 Defend others;\r\n\u2022 Effect an arrest or detention;\r\n\u2022 Prevent escape; or,\r\n\u2022 Overcome resistance.\" (LAPD, Volume 1, pg. 67)", "\"Officers shall carry out their duties, including use of force,\r\nin a manner that is fair and unbiased\" (LAPD, Volume 1, pg.67)", "\"An officer shall intercede when present and observing another officer using force that is clearly beyond\r\nthat which is necessary, as determined by an objectively reasonable officer under the\r\ncircumstances, taking into account the possibility that other officers may have additional\r\ninformation regarding the threat posed by a subject.\" (LAPD, Volume 1, pg.70)", null, null, null, null, null, null, null, null, null, null], "Wikidata Entry": [null, "https://www.wikidata.org/wiki/Q121365661, https://www.wikidata.org/wiki/Q215875 ", null, "https://www.wikidata.org/wiki/Q25245643", "https://www.wikidata.org/wiki/Q1182511", "https://www.wikidata.org/wiki/Q2301186", null, null, null, null, null, null, null, null, null, null, null, null, null, null], "History": [null, null, null, null, null, null, null, null, null, null, "This term was the outcome of the Graham v Connor case ", null, null, null, null, null, null, null, null, null], "Cases": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Lawsuits": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 9": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 10": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 11": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 12": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 13": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 14": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 15": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 16": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 17": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 18": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 19": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 20": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 21": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 22": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 23": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 24": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 25": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 26": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 27": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "Unnamed: 28": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "term_plus_id": ["Minimum_q1", "Reasonable, reasonably, and reasonableness_q2", "Feasible_q3", "Totality of the circumstances_q4", "De-escalation_q5", "Necessary_q6", "Proportional (or proportionality)_q7", "Non-deadly_q8", "Fair and Unbiased_q9", "Intercede_q10", "Objectively reasonable (officer/standard)_q11", "Reasonable officer_q12", "Reasonably believe(s)_q13", "Reasonably perceived_q14", "Reasonably appear(s)_q15", "Reasonable force_q16", "Perceived by the officer_q17", "Well-reasoned discretion_q18", "Split-second _q19", "Quick judgement_q20"]}}]}</script>
 </div>
 </div>
@@ -232,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="5">
+<div id="5f5df646" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 
     <div id="q1" class="info-card" style="border: 1px solid #ddd; border-radius: 20px; padding: 10px; margin: 10px;">
@@ -523,7 +531,6 @@ information regarding the threat posed by a subject." (LAPD, Volume 1, pg.70)</p
     
 </div>
 </div>
-
 <script>
     const outputCells = document.querySelectorAll('.cell');
     const tableCell = outputCells[2];
@@ -586,9 +593,8 @@ ejs.render('<script>alert("helloo);</script>');
 
 
 </main> <!-- /main -->
-
 <script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"viewof policy_trm_search = Inputs.search(transpose(data), \n{placeholder: \"Enter a policy term (for example, reasonable)\", \nwidth: 1500,\n})\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"// try to render by doing some loop (with htl.html)\nviewof pol_terms_rows = Inputs.table(policy_trm_search, {\n  columns: [\n    'term_plus_id',\n  ],\n  format: {\n    'term_plus_id': x => {\n          // delimiter -\n          let indexDelim = x.indexOf('_');\n          // everything before is name\n          let term = x.substring(0, indexDelim);\n          // everything after is ID \n          let iD = x.substring(indexDelim + 1);\n          return htl.html`<button type=\"button\" id=\"${iD}\" style=\"border-radius: 20px;\" onclick=\"showInfoCard(${iD})\"\" class=\"options\">${term}</button>`\n          },\n  },\n  width: { \n    term_plus_id: 900,\n  },\n})\n"},{"methodName":"interpretQuiet","source":"shinyInput('policy_trm_search')"},{"methodName":"interpretQuiet","source":"shinyInput('pol_terms_rows')"}]}
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBwb2xpY3lfdHJtX3NlYXJjaCA9IElucHV0cy5zZWFyY2godHJhbnNwb3NlKGRhdGEpLCBcbntwbGFjZWhvbGRlcjogXCJFbnRlciBhIHBvbGljeSB0ZXJtIChmb3IgZXhhbXBsZSwgcmVhc29uYWJsZSlcIiwgXG53aWR0aDogMTUwMCxcbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIvLyB0cnkgdG8gcmVuZGVyIGJ5IGRvaW5nIHNvbWUgbG9vcCAod2l0aCBodGwuaHRtbClcbnZpZXdvZiBwb2xfdGVybXNfcm93cyA9IElucHV0cy50YWJsZShwb2xpY3lfdHJtX3NlYXJjaCwge1xuICBjb2x1bW5zOiBbXG4gICAgJ3Rlcm1fcGx1c19pZCcsXG4gIF0sXG4gIGZvcm1hdDoge1xuICAgICd0ZXJtX3BsdXNfaWQnOiB4ID0+IHtcbiAgICAgICAgICAvLyBkZWxpbWl0ZXIgLVxuICAgICAgICAgIGxldCBpbmRleERlbGltID0geC5pbmRleE9mKCdfJyk7XG4gICAgICAgICAgLy8gZXZlcnl0aGluZyBiZWZvcmUgaXMgbmFtZVxuICAgICAgICAgIGxldCB0ZXJtID0geC5zdWJzdHJpbmcoMCwgaW5kZXhEZWxpbSk7XG4gICAgICAgICAgLy8gZXZlcnl0aGluZyBhZnRlciBpcyBJRCBcbiAgICAgICAgICBsZXQgaUQgPSB4LnN1YnN0cmluZyhpbmRleERlbGltICsgMSk7XG4gICAgICAgICAgcmV0dXJuIGh0bC5odG1sYDxidXR0b24gdHlwZT1cImJ1dHRvblwiIGlkPVwiJHtpRH1cIiBzdHlsZT1cImJvcmRlci1yYWRpdXM6IDIwcHg7XCIgb25jbGljaz1cInNob3dJbmZvQ2FyZCgke2lEfSlcIlwiIGNsYXNzPVwib3B0aW9uc1wiPiR7dGVybX08L2J1dHRvbj5gXG4gICAgICAgICAgfSxcbiAgfSxcbiAgd2lkdGg6IHsgXG4gICAgdGVybV9wbHVzX2lkOiA5MDAsXG4gIH0sXG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdwb2xpY3lfdHJtX3NlYXJjaCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdwb2xfdGVybXNfcm93cycpIn1dfQ==
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
@@ -677,10 +683,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -690,8 +695,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -704,6 +718,135 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        typesetMath(container);
+        return container.innerHTML
+      } else {
+        typesetMath(note);
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -747,6 +890,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -772,6 +916,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -832,6 +1002,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 
