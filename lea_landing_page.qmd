@@ -122,13 +122,13 @@ fig_ca_counties.add_trace(
 )
 
 # customize hover label appearance
-fig_ca_counties.update_layout(
-    hoverlabel=dict(
-        bgcolor="white",
-        font_size=12,
-        font_family="Rockwell"
-    )
-)
+# fig_ca_counties.update_layout(
+#     hoverlabel=dict(
+#         bgcolor="white",
+#         font_size=12,
+#         font_family="Rockwell"
+#     )
+# )
 # fig_scatter.show()
 fig_ca_counties.show()
 ```
