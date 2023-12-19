@@ -104,6 +104,9 @@ df_counties_ca = pd.read_csv("one_col_raw.githubusercontent.com_plotly_datasets_
 fig_ca_counties = px.choropleth_mapbox(df_counties_ca, 
                            geojson=counties, 
                            locations='fips',
+                           hover_data={ 
+                                  'fips':False,
+                              },
                            color_continuous_scale="Viridis",
                            range_color=(0, 12),
                            mapbox_style="carto-positron",
