@@ -177,6 +177,10 @@ input[type='search'] {
     border: none;
 }
 
+.about-info {
+   color: #FFFFFF;
+}
+
 .info-card {
     background-color: #FFFFFF;
     display: none;

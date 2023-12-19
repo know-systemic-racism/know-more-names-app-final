@@ -64,7 +64,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -106,7 +106,14 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Visualizations</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/know-systemic-racism/know-more-names-app-final" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -116,9 +123,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -139,7 +144,39 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>About this site</p>
+<div class="about-info">
+<section id="purpose" class="level1">
+<h1>Purpose</h1>
+<p>This web application aims to serve community members, activists, and lawmakers by inter-linking existing datasets and rich unstructured data sources to make the information more easily accessible and contextualized.</p>
+</section>
+<section id="datasets-and-data-structure" class="level1">
+<h1>Datasets and data structure:</h1>
+<p>This web application leverages the following datasets: Wikidata knowledge graph (see KSR’s WikiProject <a href="https://www.wikidata.org/wiki/Wikidata:WikiProject_Systemic_Racism_Knowledge_Graph">here</a>) and additional data to be completed (*):</p>
+<ol>
+    <li>Black people killed during encounters with the police in California </li>
+    <li>Event of those encounters</li>
+    <li>California law enforcement agencies (LEAs)</li>
+    <li>Military equipment index and taxonomy including images*</li>
+    <li>Key legal terms in policies and extracted (words in context) from LEA policy documents*</li>
+    <li>Military equipment inventories* </li>
+</ol>
+</section>
+<section id="how-it-works" class="level1">
+<h1>How it works</h1>
+<section id="updating-data-to-reflect-wikidataother-data-sources-changes" class="level3">
+<h3 class="anchored" data-anchor-id="updating-data-to-reflect-wikidataother-data-sources-changes">Updating data to reflect Wikidata/other data source’s changes</h3>
+<p>A scheduled GitHub Actions workflow runs every month to dynamically update the information on this website if there have been any changes to the data sources.</p>
+</section>
+<section id="data-flow" class="level3">
+<h3 class="anchored" data-anchor-id="data-flow">Data flow</h3>
+<p>The data in the information cards for the Fatal Encounters and Law Enforcement Agency sections is pulled directly from Wikidata using their API. For now, the data for the other sections on the website have not yet been entered into Wikidata, so they are being pulled from Google Sheets using Python’s Pandas library.</p>
+</section>
+</section>
+<section id="open-source" class="level1">
+<h1>Open source</h1>
+<p>Check out this website’s repository <a href="https://github.com/know-systemic-racism/know-more-names-app-final">here</a>.</p>
+</section></div>
+
 
 
 
