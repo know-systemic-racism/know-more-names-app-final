@@ -12,11 +12,7 @@ format:
 
 # All Fatal Encounters
 ```{=html}
-<p class="instructions">
-```
-Filter the bar chart and map below.
-```{=html}
-</p>
+<p class="instructions">Use search bar to filter the bar chart and map below.</p>
 ```
 ```{python}
 import sys
