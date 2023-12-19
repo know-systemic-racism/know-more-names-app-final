@@ -104,8 +104,7 @@ for i in range(len(results)):
 </body>
 <script>
   let lastHeaderElem = document.querySelector("nav");
-  lastHeaderElem.insertAdjacentHTML('afterend', "<h1>Do you know about</h1>",
-  );
+  lastHeaderElem.insertAdjacentHTML('afterend', "<h1 id='home-pg-title'>Do you know about</h1>");
 </script>
 ```
 
