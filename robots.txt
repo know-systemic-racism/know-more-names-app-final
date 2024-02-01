@@ -1,1 +1,1 @@
-Sitemap: https://github.com/know-systemic-racism/know-more-names-app-final/sitemap.xml
+Sitemap: https://know-systemic-racism.github.io/know-more-names-app-final/sitemap.xml
